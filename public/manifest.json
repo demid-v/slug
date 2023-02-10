@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "slug",
+  "short_name": "Slug",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Chat app."
+}
