@@ -1,8 +1,8 @@
 import { router } from "../utils";
-import example from "./example";
+import messages from "./messages";
 
 export const appRouter = router({
-  example,
+  messages,
 });
 
 export type IAppRouter = typeof appRouter;
