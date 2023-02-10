@@ -1,0 +1,47 @@
+{
+  "name": "slug",
+  "scripts": {
+    "dev": "solid-start dev --port 3000",
+    "start": "solid-start start --port 3000",
+    "build": "solid-start build",
+    "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
+    "push": "prisma db push",
+    "postinstall": "prisma generate"
+  },
+  "type": "module",
+  "devDependencies": {
+    "solid-start-node": "^0.2.19",
+    "typescript": "^4.8.3",
+    "vite": "^3.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.27.0",
+    "eslint-plugin-solid": "^0.9.3",
+    "@types/node": "^18.11.18",
+    "solid-start-vercel": "^0.2.19",
+    "prisma": "^4.6.1",
+    "tailwindcss": "^3.2.4",
+    "postcss": "^8.4.19",
+    "autoprefixer": "^10.4.13"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.7.0",
+    "solid-js": "^1.5.7",
+    "solid-start": "^0.2.19",
+    "undici": "5.11.0",
+    "zod": "^3.19.1",
+    "@auth/core": "^0.2.5",
+    "@auth/solid-start": "^0.1.0",
+    "@next-auth/prisma-adapter": "^1.0.5",
+    "@prisma/client": "^4.6.1",
+    "solid-trpc": "0.1.0-sssr.6",
+    "@adeora/solid-query": "0.16.0",
+    "solid-start-trpc": "^0.0.16",
+    "@trpc/client": "^10.1.0",
+    "@trpc/server": "^10.1.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
