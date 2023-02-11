@@ -1,32 +1,16 @@
-import { createSignal, For, type VoidComponent } from "solid-js";
-import { trpc } from "../utils/trpc";
-import ChatInput from "~/components/ChatInput";
-import TextBubble from "~/components/TextBubble";
+import { getSession } from "@auth/solid-start";
+import { type VoidComponent } from "solid-js";
+import { createServerData$ } from "solid-start/server";
+import Auth from "~/components/Auth";
+import Chat from "~/components/Chat";
+import { authOpts } from "./api/auth/[...solidauth]";
 
 const Home: VoidComponent = () => {
-  const messagesRes = trpc.messages.getMessages.useQuery();
-
-  const [messages, setMessages] = createSignal(messagesRes.data);
-
-  return (
-    <div class="mx-auto mt-10 w-72">
-      <div class="h-40 border-2 border-black p-2">
-        <div class="flex h-full flex-col justify-end">
-          <div class="flex flex-col-reverse overflow-y-auto">
-            <For each={messages()}>
-              {(message) => <TextBubble message={message.text} />}
-            </For>
-          </div>
-        </div>
-      </div>
-      <div class="flex">
-        <button class="-mt-0.5 -mr-0.5 border-2 border-black px-2">
-          Clear
-        </button>
-        <ChatInput setMessages={setMessages} />
-      </div>
-    </div>
+  const sessionData = createServerData$(
+    async (_, event) => await getSession(event.request, authOpts)
   );
+
+  return <>{sessionData() ? <Chat /> : <Auth />}</>;
 };
 
 export default Home;
