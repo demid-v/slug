@@ -1,9 +1,19 @@
-import type { message } from "@prisma/client";
-import { createSignal, onMount, type Setter } from "solid-js";
+import type { Session } from "@auth/core/types";
+import type { Message } from "@prisma/client";
+import {
+  createSignal,
+  onMount,
+  type VoidComponent,
+  type Resource,
+  type Setter,
+} from "solid-js";
+import { trpc } from "~/utils/trpc";
+import type { ClientMessage } from "~/utils/types";
 
-export default function ChatInput(props: {
-  setMessages: Setter<message[] | undefined>;
-}) {
+const ChatInput: VoidComponent<{
+  sessionData: Resource<Session | null | undefined>;
+  setMessages: Setter<ClientMessage[] | undefined>;
+}> = (props) => {
   const [inputValue, setInputValue] = createSignal("");
 
   let ws: WebSocket | null = null;
@@ -12,11 +22,13 @@ export default function ChatInput(props: {
     ws = new WebSocket("wss://slug-server.glitch.me/");
     ws.addEventListener("message", (event) => {
       props.setMessages((messages) => [
-        { text: event.data } as message,
+        { text: event.data } as Message,
         ...(messages ? messages : []),
       ]);
     });
   });
+
+  const createMessage = trpc.messages.createMessage.useMutation();
 
   return (
     <input
@@ -28,18 +40,32 @@ export default function ChatInput(props: {
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
-          const message = inputValue();
+          const text = inputValue();
+          setInputValue("");
+
+          const userId = props.sessionData()?.user?.id;
+
+          if (userId === undefined) {
+            throw new Error("Unauthorized");
+          }
 
           props.setMessages((messages) => [
-            { text: message } as message,
+            { text, userId },
             ...(messages ? messages : []),
           ]);
 
-          ws?.send(message);
-
-          setInputValue("");
+          createMessage
+            .mutateAsync({
+              text,
+              userId,
+            })
+            .then(() => {
+              ws?.send(text);
+            });
         }
       }}
     />
   );
-}
+};
+
+export default ChatInput;

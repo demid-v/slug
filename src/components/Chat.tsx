@@ -1,13 +1,32 @@
-import { type VoidComponent, createSignal, For } from "solid-js";
+import {
+  type VoidComponent,
+  For,
+  type Resource,
+  createSignal,
+  createEffect,
+} from "solid-js";
 import { trpc } from "~/utils/trpc";
 import ChatInput from "./ChatInput";
 import TextBubble from "./TextBubble";
 import { signOut } from "@auth/solid-start/client";
+import type { Session } from "@auth/core/types";
+import { isServer } from "solid-js/web";
+import type { ClientMessage } from "~/utils/types";
 
-const Chat: VoidComponent = () => {
-  const messagesRes = trpc.messages.getMessages.useQuery();
+const Chat: VoidComponent<{
+  sessionData: Resource<Session | null | undefined>;
+}> = (props) => {
+  const messagesRes = !isServer && trpc.messages.getMessages.useQuery();
 
-  const [messages, setMessages] = createSignal(messagesRes.data);
+  const [messages, setMessages] = createSignal<ClientMessage[] | undefined>(
+    messagesRes?.data
+  );
+
+  createEffect(() => {
+    setMessages(messagesRes?.data);
+  }, messagesRes?.data);
+
+  const deleteAllMessages = trpc.messages.deleteAllMessages.useMutation();
 
   return (
     <div>
@@ -30,10 +49,20 @@ const Chat: VoidComponent = () => {
           </div>
         </div>
         <div class="flex">
-          <button class="-mt-0.5 -mr-0.5 border-2 border-black px-2">
+          <button
+            class="-mt-0.5 -mr-0.5 border-2 border-black px-2"
+            onClick={() => {
+              deleteAllMessages
+                .mutateAsync()
+                .then(() => messagesRes?.refetch());
+            }}
+          >
             Clear
           </button>
-          <ChatInput setMessages={setMessages} />
+          <ChatInput
+            sessionData={props.sessionData}
+            setMessages={setMessages}
+          />
         </div>
       </div>
     </div>

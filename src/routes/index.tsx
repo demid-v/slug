@@ -10,7 +10,7 @@ const Home: VoidComponent = () => {
     async (_, event) => await getSession(event.request, authOpts)
   );
 
-  return <>{sessionData() ? <Chat /> : <Auth />}</>;
+  return <>{sessionData() ? <Chat sessionData={sessionData} /> : <Auth />}</>;
 };
 
 export default Home;
