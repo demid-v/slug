@@ -1,4 +1,8 @@
-import { protectedProcedure, router } from "../utils";
+import {
+  limitedProtectedProcedure,
+  protectedProcedure,
+  router,
+} from "../utils";
 import { z } from "zod";
 
 export default router({
@@ -20,7 +24,7 @@ export default router({
       return accounts;
     }),
 
-  createMessage: protectedProcedure
+  createMessage: limitedProtectedProcedure
     .input(
       z.object({
         text: z.string(),

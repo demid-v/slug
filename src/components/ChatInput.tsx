@@ -41,6 +41,9 @@ const ChatInput: VoidComponent<{
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           const text = inputValue();
+
+          if (text.trim() === "") return;
+
           setInputValue("");
 
           const userId = props.sessionData()?.user?.id;
