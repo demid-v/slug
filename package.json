@@ -29,13 +29,13 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "@adeora/solid-query": "0.16.0",
     "@auth/core": "^0.3.0",
     "@auth/solid-start": "^0.1.0",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.6.1",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
+    "@tanstack/solid-query": "^4.24.6",
     "@trpc/client": "^10.1.0",
     "@trpc/server": "^10.1.0",
     "@upstash/ratelimit": "^0.3.2",

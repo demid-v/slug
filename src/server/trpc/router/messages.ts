@@ -14,16 +14,6 @@ export default router({
     return messages;
   }),
 
-  getAccounts: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input: { id } }) => {
-      const accounts = await ctx.prisma.account.findMany({
-        where: { userId: id },
-      });
-
-      return accounts;
-    }),
-
   createMessage: limitedProtectedProcedure
     .input(
       z.object({

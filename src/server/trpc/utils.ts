@@ -33,8 +33,8 @@ const withRateLimit = t.middleware(async ({ ctx, next }) => {
 });
 
 export const procedure = t.procedure;
-export const limitedProcedure = t.procedure.use(withRateLimit);
-export const protectedProcedure = t.procedure.use(withRateLimit).use(
+export const limitedProcedure = procedure.use(withRateLimit);
+export const protectedProcedure = procedure.use(
   t.middleware(async ({ ctx, next }) => {
     if (!ctx.session || !ctx.session.user) {
       throw new TRPCError({

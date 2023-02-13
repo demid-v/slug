@@ -52,9 +52,7 @@ const Chat: VoidComponent<{
           <button
             class="-mt-0.5 -mr-0.5 border-2 border-black px-2"
             onClick={() => {
-              deleteAllMessages
-                .mutateAsync()
-                .then(() => messagesRes?.refetch());
+              deleteAllMessages.mutateAsync().then(() => setMessages([]));
             }}
           >
             Clear

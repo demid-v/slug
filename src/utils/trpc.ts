@@ -1,4 +1,4 @@
-import { QueryClient } from "@adeora/solid-query";
+import { QueryClient } from "@tanstack/solid-query";
 import type { IAppRouter } from "~/server/trpc/router/_app";
 import { createTRPCSolidStart } from "solid-trpc";
 import { httpBatchLink } from "@trpc/client";
