@@ -1,5 +1,4 @@
 import type { Session } from "@auth/core/types";
-import type { Message } from "@prisma/client";
 import {
   createSignal,
   onMount,
@@ -22,7 +21,7 @@ const ChatInput: VoidComponent<{
     ws = new WebSocket("wss://slug-server.glitch.me/");
     ws.addEventListener("message", (event) => {
       props.setMessages((messages) => [
-        { text: event.data } as Message,
+        JSON.parse(event.data),
         ...(messages ? messages : []),
       ]);
     });
@@ -52,19 +51,16 @@ const ChatInput: VoidComponent<{
             throw new Error("Unauthorized");
           }
 
+          const message = { text, userId };
+
           props.setMessages((messages) => [
-            { text, userId },
+            message,
             ...(messages ? messages : []),
           ]);
 
-          createMessage
-            .mutateAsync({
-              text,
-              userId,
-            })
-            .then(() => {
-              ws?.send(text);
-            });
+          createMessage.mutateAsync(message).then(() => {
+            ws?.send(JSON.stringify(message));
+          });
         }
       }}
     />

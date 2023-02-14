@@ -43,7 +43,12 @@ const Chat: VoidComponent<{
           <div class="flex h-full flex-col justify-end">
             <div class="flex flex-col-reverse overflow-y-auto">
               <For each={messages()}>
-                {(message) => <TextBubble message={message.text} />}
+                {(message) => (
+                  <TextBubble
+                    message={message}
+                    sessionData={props.sessionData}
+                  />
+                )}
               </For>
             </div>
           </div>
