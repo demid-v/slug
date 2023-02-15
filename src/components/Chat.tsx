@@ -41,7 +41,7 @@ const Chat: VoidComponent<{
       <div class="mx-auto w-72">
         <div class="h-40 border-2 border-black p-2">
           <div class="flex h-full flex-col justify-end">
-            <div class="flex flex-col-reverse overflow-y-auto">
+            <div class="flex flex-col-reverse gap-1 overflow-y-auto">
               <For each={messages()}>
                 {(message) => (
                   <TextBubble

@@ -8,6 +8,12 @@ import { z } from "zod";
 export default router({
   getMessages: protectedProcedure.query(async ({ ctx }) => {
     const messages = await ctx.prisma.message.findMany({
+      select: {
+        text: true,
+        created: true,
+        userId: true,
+        user: { select: { image: true } },
+      },
       orderBy: { created: "desc" },
     });
 

@@ -45,13 +45,13 @@ const ChatInput: VoidComponent<{
 
           setInputValue("");
 
-          const userId = props.sessionData()?.user?.id;
+          const { id: userId, image = null } = props.sessionData()?.user ?? {};
 
           if (userId === undefined) {
             throw new Error("Unauthorized");
           }
 
-          const message = { text, userId };
+          const message = { text, userId, user: { image } };
 
           props.setMessages((messages) => [
             message,

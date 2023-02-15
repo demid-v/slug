@@ -7,15 +7,15 @@ export default function TextBubble(props: {
   sessionData: Resource<Session | null | undefined>;
 }) {
   return (
-    <div
-      class={
-        "mt-1 w-fit max-w-full rounded-full border border-black px-2.5" +
-        (props.message.userId !== props.sessionData()?.user?.id
-          ? " self-end"
-          : "")
-      }
-    >
-      {props.message.text}
+    <div class="flex items-center gap-1">
+      <img
+        src={props.message.user?.image ?? ""}
+        alt="User's pic"
+        class="w-5 rounded-full"
+      />
+      <div class="w-fit max-w-full rounded-full border border-black px-2.5">
+        {props.message.text}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import type { Message } from "@prisma/client";
+import type { RouterOutputs } from "./trpc";
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
-type ClientMessage = Optional<Message, "id" | "created">;
+type Messages = RouterOutputs["messages"]["getMessages"];
+type ClientMessage = Optional<Messages[0], "created" | "user">;
 
 export type { ClientMessage };
