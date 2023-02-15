@@ -14,6 +14,8 @@ export const serverScheme = z.object({
   AUTH_TRUST_HOST: z.string().optional(),
   AUTH_URL: z.string().optional(),
   DATABASE_URL: z.string(),
+  UPSTASH_REDIS_REST_URL: z.string(),
+  UPSTASH_REDIS_REST_TOKEN: z.string(),
 });
 
 export const clientScheme = z.object({
