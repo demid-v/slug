@@ -10,7 +10,7 @@ import { trpc } from "~/utils/trpc";
 import type { ClientMessage } from "~/utils/types";
 
 const ChatInput: VoidComponent<{
-  sessionData: Resource<Session | null | undefined>;
+  session: Resource<Session | null | undefined> | undefined;
   setMessages: Setter<ClientMessage[] | undefined>;
 }> = (props) => {
   const [inputValue, setInputValue] = createSignal("");
@@ -45,13 +45,22 @@ const ChatInput: VoidComponent<{
 
           setInputValue("");
 
-          const { id: userId, image = null } = props.sessionData()?.user ?? {};
+          const {
+            id: userId,
+            name = null,
+            image = null,
+          } = props.session?.()?.user ?? {};
 
           if (userId === undefined) {
             throw new Error("Unauthorized");
           }
 
-          const message = { text, userId, user: { image } };
+          const message = {
+            text,
+            userId,
+            user: { name, image },
+            channelId: "cle66wjaj000c7kf01gjb2gc8",
+          };
 
           props.setMessages((messages) => [
             message,

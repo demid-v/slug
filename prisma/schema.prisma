@@ -45,18 +45,36 @@ model User {
   Message       Message[]
 }
 
-model Message {
-  id      String   @id @default(cuid())
-  text    String
-  created DateTime @default(now())
-  userId  String
-  user    User     @relation(fields: [userId], references: [id])
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  text      String   @db.Text
+  created   DateTime @default(now())
+  userId    String
+  channelId String
+  user      User     @relation(fields: [userId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id])
+}
+
+model Channel {
+  id       String    @id @default(cuid())
+  name     String    @db.VarChar(100)
+  created  DateTime  @default(now())
+  serverId String
+  server   Server    @relation(fields: [serverId], references: [id])
+  Message  Message[]
+}
+
+model Server {
+  id      String    @id @default(cuid())
+  name    String    @db.VarChar(100)
+  created DateTime  @default(now())
+  channel Channel[]
 }

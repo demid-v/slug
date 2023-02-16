@@ -1,16 +1,12 @@
-import { getSession } from "@auth/solid-start";
-import { type VoidComponent } from "solid-js";
-import { createServerData$ } from "solid-start/server";
+import type { VoidComponent } from "solid-js";
 import Auth from "~/components/Auth";
-import Chat from "~/components/Chat";
-import { authOpts } from "./api/auth/[...solidauth]";
+import Catalog from "~/components/Catalog";
+import { useSession } from "~/session-context";
 
 const Home: VoidComponent = () => {
-  const sessionData = createServerData$(
-    async (_, event) => await getSession(event.request, authOpts)
-  );
+  const session = useSession();
 
-  return <>{sessionData() ? <Chat sessionData={sessionData} /> : <Auth />}</>;
+  return <>{session?.() ? <Catalog /> : <Auth />}</>;
 };
 
 export default Home;

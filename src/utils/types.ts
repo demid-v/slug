@@ -3,6 +3,8 @@ import type { RouterOutputs } from "./trpc";
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 type Messages = RouterOutputs["messages"]["getMessages"];
-type ClientMessage = Optional<Messages[0], "created" | "user">;
+type ClientMessage = Optional<Messages[0], "created">;
 
-export type { ClientMessage };
+type Servers = RouterOutputs["messages"]["getServers"];
+
+export type { ClientMessage, Servers };
