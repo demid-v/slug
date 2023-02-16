@@ -13,10 +13,7 @@ const Chat: VoidComponent = () => {
   const params = useParams();
   const [serverId, channelId] = params.channel.split("/");
 
-  const server = trpc.messages.getServer.useQuery(() => ({ id: serverId }));
-  const channel = trpc.messages.getChannel.useQuery(() => ({
-    id: channelId,
-  }));
+  const server = trpc.servers.getServer.useQuery(() => ({ id: serverId }));
 
   const messagesRes = trpc.messages.getMessages.useQuery();
 
@@ -30,8 +27,12 @@ const Chat: VoidComponent = () => {
 
   const deleteAllMessages = trpc.messages.deleteAll.useMutation();
 
-  const createServer = trpc.messages.createServer.useMutation();
-  const createChannel = trpc.messages.createChannel.useMutation();
+  const createServer = trpc.servers.createServer.useMutation();
+  const createChannel = trpc.channels.createChannel.useMutation();
+
+  const channels = trpc.channels.getChannelsForServer.useQuery(() => ({
+    serverId,
+  }));
 
   return (
     <div>
@@ -43,7 +44,7 @@ const Chat: VoidComponent = () => {
           Sign out
         </button>
       </header>
-      <button
+      {/* <button
         onClick={() => {
           createServer.mutateAsync({ name: "Test server" }).then(console.log);
         }}
@@ -54,38 +55,52 @@ const Chat: VoidComponent = () => {
         onClick={() => {
           createChannel
             .mutateAsync({
-              name: "Test channel",
+              name: "Test channel 3",
               serverId: "cle6cuf5g00087k2kt7hvceqm",
             })
             .then(console.log);
         }}
       >
         New channel
-      </button>
-      <h1>{server.data?.name}</h1>
-      <h2>{channel.data?.name}</h2>
-      <div class="mx-auto w-72">
-        <div class="h-40 border-2 border-black p-2">
-          <div class="flex h-full flex-col justify-end">
-            <div class="flex flex-col-reverse gap-1 overflow-y-auto">
-              <For each={messages()}>
-                {(message) => <TextBubble message={message} />}
-              </For>
+      </button> */}
+      <div class="mt-7 px-10">
+        <h1 class="mb-4 text-center text-3xl font-medium">
+          {server.data?.name}
+        </h1>
+        <div class="mx-auto flex">
+          <ol class="-mr-0.5 w-56 border-2 border-black py-1">
+            <For each={channels.data}>
+              {(channel) => (
+                <li class="cursor-pointer px-2 hover:bg-gray-300">
+                  {channel.name}
+                </li>
+              )}
+            </For>
+          </ol>
+          <div class="w-full">
+            <div class="h-72 border-2 border-black p-2">
+              <div class="flex h-full flex-col justify-end">
+                <div class="flex flex-col-reverse gap-1 overflow-y-auto">
+                  <For each={messages()}>
+                    {(message) => <TextBubble message={message} />}
+                  </For>
+                </div>
+              </div>
+            </div>
+            <div class="flex">
+              <button
+                class="-mt-0.5 -mr-0.5 border-2 border-black px-2"
+                onClick={() => {
+                  deleteAllMessages.mutateAsync().then(() => {
+                    setMessages([]);
+                  });
+                }}
+              >
+                Clear
+              </button>
+              <ChatInput session={session} setMessages={setMessages} />
             </div>
           </div>
-        </div>
-        <div class="flex">
-          <button
-            class="-mt-0.5 -mr-0.5 border-2 border-black px-2"
-            onClick={() => {
-              deleteAllMessages.mutateAsync().then(() => {
-                setMessages([]);
-              });
-            }}
-          >
-            Clear
-          </button>
-          <ChatInput session={session} setMessages={setMessages} />
         </div>
       </div>
     </div>

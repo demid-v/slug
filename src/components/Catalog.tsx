@@ -4,7 +4,7 @@ import { trpc } from "~/utils/trpc";
 import type { Servers } from "~/utils/types";
 
 const Catalog: VoidComponent = () => {
-  const serversRes = trpc.messages.getServers.useQuery();
+  const serversRes = trpc.servers.getServers.useQuery();
 
   const [servers, setServers] = createSignal<Servers | undefined>(
     serversRes?.data

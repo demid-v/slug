@@ -5,7 +5,7 @@ import { trpc } from "~/utils/trpc";
 const Chat: VoidComponent = () => {
   const params = useParams();
 
-  const channel = trpc.messages.getChannel.useQuery(() => ({
+  const channel = trpc.channels.getChannel.useQuery(() => ({
     serverId: params.serverId,
   }));
 

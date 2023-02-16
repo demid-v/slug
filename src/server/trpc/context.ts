@@ -8,6 +8,7 @@ export const createContextInner = async (
   opts: createSolidAPIHandlerContext
 ) => {
   const session = await getSession(opts.req, authOpts);
+
   return {
     ...opts,
     prisma,
