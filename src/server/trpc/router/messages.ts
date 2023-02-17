@@ -6,12 +6,34 @@ import {
 import { z } from "zod";
 
 export default router({
-  getMessages: protectedProcedure.query(async ({ ctx }) => {
+  getMessages: protectedProcedure
+    .input(
+      z.object({
+        channelId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input: { channelId } }) => {
+      const messages = await ctx.prisma.message.findMany({
+        select: {
+          text: true,
+          created: true,
+          userId: true,
+          user: { select: { name: true, image: true } },
+        },
+        where: { channelId },
+        orderBy: { created: "desc" },
+      });
+
+      return messages;
+    }),
+
+  getAllMessages: protectedProcedure.query(async ({ ctx }) => {
     const messages = await ctx.prisma.message.findMany({
       select: {
         text: true,
         created: true,
         userId: true,
+        channelId: true,
         user: { select: { name: true, image: true } },
       },
       orderBy: { created: "desc" },

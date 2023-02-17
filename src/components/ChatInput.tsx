@@ -1,31 +1,23 @@
-import type { Session } from "@auth/core/types";
 import {
   createSignal,
-  onMount,
   type VoidComponent,
-  type Resource,
   type Setter,
+  createEffect,
 } from "solid-js";
+import { useSession } from "~/contexts/session";
+import { useWebSocket } from "~/contexts/web-socket";
 import { trpc } from "~/utils/trpc";
 import type { ClientMessage } from "~/utils/types";
 
 const ChatInput: VoidComponent<{
-  session: Resource<Session | null | undefined> | undefined;
   setMessages: Setter<ClientMessage[] | undefined>;
 }> = (props) => {
+  const session = useSession();
+  const [webSocket] = useWebSocket() ?? [];
+
+  createEffect(() => 0, session?.());
+
   const [inputValue, setInputValue] = createSignal("");
-
-  let ws: WebSocket | null = null;
-
-  onMount(() => {
-    ws = new WebSocket("wss://slug-server.glitch.me/");
-    ws.addEventListener("message", (event) => {
-      props.setMessages((messages) => [
-        JSON.parse(event.data),
-        ...(messages ? messages : []),
-      ]);
-    });
-  });
 
   const createMessage = trpc.messages.createMessage.useMutation();
 
@@ -39,9 +31,9 @@ const ChatInput: VoidComponent<{
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
-          const text = inputValue();
+          const text = inputValue().trim();
 
-          if (text.trim() === "") return;
+          if (text === "") return;
 
           setInputValue("");
 
@@ -49,7 +41,7 @@ const ChatInput: VoidComponent<{
             id: userId,
             name = null,
             image = null,
-          } = props.session?.()?.user ?? {};
+          } = session?.()?.user ?? {};
 
           if (userId === undefined) {
             throw new Error("Unauthorized");
@@ -59,7 +51,7 @@ const ChatInput: VoidComponent<{
             text,
             userId,
             user: { name, image },
-            channelId: "cle66wjaj000c7kf01gjb2gc8",
+            channelId: "cle6cv9fg000b7k2kawj20syd",
           };
 
           props.setMessages((messages) => [
@@ -68,7 +60,7 @@ const ChatInput: VoidComponent<{
           ]);
 
           createMessage.mutateAsync(message).then(() => {
-            ws?.send(JSON.stringify(message));
+            webSocket?.send(JSON.stringify(message));
           });
         }
       }}

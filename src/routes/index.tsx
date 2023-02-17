@@ -1,7 +1,7 @@
 import type { VoidComponent } from "solid-js";
 import Auth from "~/components/Auth";
 import Catalog from "~/components/Catalog";
-import { useSession } from "~/session-context";
+import { useSession } from "~/contexts/session";
 
 const Home: VoidComponent = () => {
   const session = useSession();

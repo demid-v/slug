@@ -14,16 +14,9 @@ import {
   Link,
 } from "solid-start";
 import { trpc, queryClient } from "~/utils/trpc";
-import { getSession } from "@auth/solid-start";
-import { createServerData$ } from "solid-start/server";
-import { authOpts } from "./routes/api/auth/[...solidauth]";
-import { SessionProvider } from "./session-context";
+import { SessionProvider } from "./contexts/session";
 
 export default function Root() {
-  const session = createServerData$(
-    async (_, event) => await getSession(event.request, authOpts)
-  );
-
   return (
     <Html lang="en">
       <Head>
@@ -35,7 +28,7 @@ export default function Root() {
         <Link rel="icon" href="/favicon.ico" />
       </Head>
       <Body>
-        <SessionProvider session={session}>
+        <SessionProvider>
           <trpc.Provider queryClient={queryClient}>
             <Suspense>
               <ErrorBoundary>
