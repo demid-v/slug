@@ -9,12 +9,24 @@ import { useWebSocket } from "~/contexts/web-socket";
 import { isServer } from "solid-js/web";
 
 const Chat: VoidComponent = () => {
-  const params = useParams();
-  const [serverId, channelId] = params.channel.split("/");
+  const paramsSplit = useParams().channel.split("/");
+  const serverId = paramsSplit[0];
+  const [channelId, setChannelId] = createSignal(paramsSplit[1]);
 
   const server = trpc.servers.getServer.useQuery(() => ({ id: serverId }));
 
-  const messagesRes = trpc.messages.getMessages.useQuery(() => ({ channelId }));
+  const messagesRes = trpc.messages.getMessages.useQuery(() => ({
+    channelId: channelId(),
+  }));
+
+  createEffect(() => {
+    setChannelId(useParams().channel.split("/")[1]);
+  });
+
+  createEffect(() => {
+    channelId();
+    messagesRes.refetch();
+  });
 
   const [messages, setMessages] = createSignal<ClientMessage[] | undefined>(
     messagesRes?.data
@@ -58,12 +70,19 @@ const Chat: VoidComponent = () => {
           {server.data?.name ?? "..."}
         </h1>
         <div class="mx-auto flex max-w-3xl">
-          <ol class="-mr-0.5 w-44 border-2 border-black py-1">
+          <ol class="-mr-0.5 w-44 border-2 border-black">
             <For each={channels.data}>
               {(channel) => (
-                <li class="px-2 hover:bg-gray-300">
-                  <A href={`${serverId}/${channel.id}`}>{channel.name}</A>
-                </li>
+                <A href={`${serverId}/${channel.id}`}>
+                  <li
+                    class={
+                      "px-2 hover:bg-gray-300" +
+                      (channelId() === channel.id ? " bg-gray-200" : "")
+                    }
+                  >
+                    {channel.name}
+                  </li>
+                </A>
               )}
             </For>
           </ol>
@@ -88,7 +107,7 @@ const Chat: VoidComponent = () => {
               >
                 Clear
               </button>
-              <ChatInput setMessages={setMessages} />
+              <ChatInput channelId={channelId()} setMessages={setMessages} />
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { trpc } from "~/utils/trpc";
 import type { ClientMessage } from "~/utils/types";
 
 const ChatInput: VoidComponent<{
+  channelId: string;
   setMessages: Setter<ClientMessage[] | undefined>;
 }> = (props) => {
   const session = useSession();
@@ -51,7 +52,7 @@ const ChatInput: VoidComponent<{
             text,
             userId,
             user: { name, image },
-            channelId: "cle6cv9fg000b7k2kawj20syd",
+            channelId: props.channelId,
           };
 
           props.setMessages((messages) => [
