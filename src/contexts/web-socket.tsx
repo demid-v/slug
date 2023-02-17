@@ -5,49 +5,40 @@ import {
   onMount,
   useContext,
   type JSXElement,
+  createEffect,
 } from "solid-js";
 
-const SessionContext =
-  createContext<
-    [WebSocket | null, Accessor<WebSocket["readyState"] | "error" | undefined>]
-  >();
+const WebSocketContext = createContext<Accessor<WebSocket | undefined>>();
 
 export function WebSocketProvider(props: { children: JSXElement }) {
-  const [webSocketState, setWebSocketState] = createSignal<
-    WebSocket["readyState"] | "error"
-  >();
-
-  let webSocket: WebSocket | null = null;
+  const [webSocket, setWebSocket] = createSignal<WebSocket>();
 
   onMount(() => {
-    webSocket = new WebSocket("wss://slug-server.glitch.me/");
-    setWebSocketState(WebSocket.CONNECTING);
+    setWebSocket(new WebSocket("wss://slug-server.glitch.me/"));
+  });
 
-    webSocket.addEventListener("open", (event) => {
+  createEffect(() => {
+    webSocket?.()?.addEventListener("open", (event) => {
       console.log("open", event);
-      setWebSocketState(WebSocket.OPEN);
     });
 
-    webSocket.addEventListener("close", (event) => {
+    webSocket?.()?.addEventListener("close", (event) => {
       console.log("close", event);
-      setWebSocketState(WebSocket.CLOSED);
-      webSocket = new WebSocket("wss://slug-server.glitch.me/");
-      setWebSocketState(WebSocket.CONNECTING);
+      setWebSocket(new WebSocket("wss://slug-server.glitch.me/"));
     });
 
-    webSocket.addEventListener("error", (event) => {
+    webSocket?.()?.addEventListener("error", (event) => {
       console.log("error", event);
-      setWebSocketState("error");
     });
   });
 
   return (
-    <SessionContext.Provider value={[webSocket, webSocketState]}>
+    <WebSocketContext.Provider value={webSocket}>
       {props.children}
-    </SessionContext.Provider>
+    </WebSocketContext.Provider>
   );
 }
 
 export function useWebSocket() {
-  return useContext(SessionContext);
+  return useContext(WebSocketContext);
 }

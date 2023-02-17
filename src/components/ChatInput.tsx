@@ -13,7 +13,7 @@ const ChatInput: VoidComponent<{
   setMessages: Setter<ClientMessage[] | undefined>;
 }> = (props) => {
   const session = useSession();
-  const [webSocket] = useWebSocket() ?? [];
+  const webSocket = useWebSocket();
 
   createEffect(() => 0, session?.());
 
@@ -60,7 +60,7 @@ const ChatInput: VoidComponent<{
           ]);
 
           createMessage.mutateAsync(message).then(() => {
-            webSocket?.send(JSON.stringify(message));
+            webSocket?.()?.send(JSON.stringify(message));
           });
         }
       }}

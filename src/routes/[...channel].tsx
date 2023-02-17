@@ -5,7 +5,8 @@ import TextBubble from "~/components/TextBubble";
 import { signOut } from "@auth/solid-start/client";
 import type { ClientMessage } from "~/utils/types";
 import { A, useParams } from "solid-start";
-import { useWebSocket, WebSocketProvider } from "~/contexts/web-socket";
+import { useWebSocket } from "~/contexts/web-socket";
+import { isServer } from "solid-js/web";
 
 const Chat: VoidComponent = () => {
   const params = useParams();
@@ -29,10 +30,19 @@ const Chat: VoidComponent = () => {
     serverId,
   }));
 
-  const [webSocket, webSocketState] = useWebSocket() ?? [];
+  const webSocket = useWebSocket();
+
+  createEffect(() => {
+    webSocket?.()?.addEventListener("message", (event) => {
+      setMessages((messages) => [
+        JSON.parse(event.data),
+        ...(messages ? messages : []),
+      ]);
+    });
+  });
 
   return (
-    <WebSocketProvider>
+    <div>
       <header class="flex justify-end px-10 py-2">
         <button
           class="text-black hover:underline"
@@ -42,7 +52,8 @@ const Chat: VoidComponent = () => {
         </button>
       </header>
       <div class="mt-7 px-10">
-        {webSocketState?.() === webSocket?.OPEN ? "Hey" : "Hi"}
+        {!isServer &&
+          (webSocket?.()?.readyState === WebSocket.OPEN ? "hi" : "hey")}
         <h1 class="mb-4 text-center text-3xl font-medium">
           {server.data?.name ?? "..."}
         </h1>
@@ -82,7 +93,7 @@ const Chat: VoidComponent = () => {
           </div>
         </div>
       </div>
-    </WebSocketProvider>
+    </div>
   );
 };
 

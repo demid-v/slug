@@ -15,6 +15,7 @@ import {
 } from "solid-start";
 import { trpc, queryClient } from "~/utils/trpc";
 import { SessionProvider } from "./contexts/session";
+import { WebSocketProvider } from "./contexts/web-socket";
 
 export default function Root() {
   return (
@@ -29,15 +30,17 @@ export default function Root() {
       </Head>
       <Body>
         <SessionProvider>
-          <trpc.Provider queryClient={queryClient}>
-            <Suspense>
-              <ErrorBoundary>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </ErrorBoundary>
-            </Suspense>
-          </trpc.Provider>
+          <WebSocketProvider>
+            <trpc.Provider queryClient={queryClient}>
+              <Suspense>
+                <ErrorBoundary>
+                  <Routes>
+                    <FileRoutes />
+                  </Routes>
+                </ErrorBoundary>
+              </Suspense>
+            </trpc.Provider>
+          </WebSocketProvider>
         </SessionProvider>
         <Scripts />
       </Body>
