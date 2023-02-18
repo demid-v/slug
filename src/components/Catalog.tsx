@@ -21,7 +21,7 @@ const Catalog: VoidComponent = () => {
         <For each={servers()}>
           {(server) => (
             <li>
-              <A href={server.id}>{server.name}</A>
+              <A href={"/chat/" + server.id}>{server.name}</A>
             </li>
           )}
         </For>
