@@ -1,9 +1,14 @@
 import type { VoidComponent } from "solid-js";
-import { Navigate, useParams } from "solid-start";
+import { Navigate, useNavigate, useParams } from "solid-start";
+import { useSession } from "~/contexts/session";
 import { trpc } from "~/utils/trpc";
 
 const Chat: VoidComponent = () => {
   const params = useParams();
+
+  if (useSession()?.() === null) {
+    useNavigate()("/", { replace: true });
+  }
 
   const channel = trpc.channels.getChannel.useQuery(() => ({
     serverId: params.serverId,

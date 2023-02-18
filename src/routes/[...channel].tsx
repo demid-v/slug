@@ -4,11 +4,15 @@ import ChatInput from "~/components/ChatInput";
 import TextBubble from "~/components/TextBubble";
 import { signOut } from "@auth/solid-start/client";
 import type { ClientMessage } from "~/utils/types";
-import { A, useParams } from "solid-start";
+import { A, useNavigate, useParams } from "solid-start";
 import { useWebSocket } from "~/contexts/web-socket";
-import { isServer } from "solid-js/web";
+import { useSession } from "~/contexts/session";
 
 const Chat: VoidComponent = () => {
+  if (useSession()?.() === null) {
+    useNavigate()("/", { replace: true });
+  }
+
   const paramsSplit = useParams().channel.split("/");
   const serverId = paramsSplit[0];
   const [channelId, setChannelId] = createSignal(paramsSplit[1]);
@@ -64,8 +68,6 @@ const Chat: VoidComponent = () => {
         </button>
       </header>
       <div class="mt-7 px-10">
-        {!isServer &&
-          (webSocket?.()?.readyState === WebSocket.OPEN ? "hi" : "hey")}
         <h1 class="mb-4 text-center text-3xl font-medium">
           {server.data?.name ?? "..."}
         </h1>
