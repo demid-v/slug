@@ -8,16 +8,16 @@ const Chat: VoidComponent = () => {
     useNavigate()("/", { replace: true });
   }
 
-  const params = useParams();
+  const { serverId } = useParams();
 
   const channel = trpc.channels.getChannel.useQuery(() => ({
-    serverId: params.serverId,
+    serverId,
   }));
 
   return (
     <>
       {channel.data?.id && (
-        <Navigate href={`/chat/${params.serverId}/${channel.data?.id}`} />
+        <Navigate href={`/chat/${serverId}/${channel.data?.id}`} />
       )}
     </>
   );

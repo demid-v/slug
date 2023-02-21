@@ -4,13 +4,13 @@ import {
   createSignal,
   onMount,
   useContext,
-  type JSXElement,
   createEffect,
+  type ParentComponent,
 } from "solid-js";
 
 const WebSocketContext = createContext<Accessor<WebSocket | undefined>>();
 
-export function WebSocketProvider(props: { children: JSXElement }) {
+const WebSocketProvider: ParentComponent = (props) => {
   const [webSocket, setWebSocket] = createSignal<WebSocket>();
 
   onMount(() => {
@@ -37,8 +37,11 @@ export function WebSocketProvider(props: { children: JSXElement }) {
       {props.children}
     </WebSocketContext.Provider>
   );
-}
+};
 
 export function useWebSocket() {
   return useContext(WebSocketContext);
 }
+
+export default WebSocketProvider;
+export { WebSocketProvider };

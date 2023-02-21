@@ -4,14 +4,14 @@ import {
   createContext,
   useContext,
   type Resource,
-  type JSXElement,
+  type ParentComponent,
 } from "solid-js";
 import { createServerData$ } from "solid-start/server";
 import { authOpts } from "~/routes/api/auth/[...solidauth]";
 
 const SessionContext = createContext<Resource<Session | null | undefined>>();
 
-export function SessionProvider(props: { children: JSXElement }) {
+const SessionProvider: ParentComponent = (props) => {
   const session = createServerData$(
     async (_, event) => await getSession(event.request, authOpts)
   );
@@ -21,8 +21,11 @@ export function SessionProvider(props: { children: JSXElement }) {
       {props.children}
     </SessionContext.Provider>
   );
-}
+};
 
 export function useSession() {
   return useContext(SessionContext);
 }
+
+export default SessionProvider;
+export { SessionProvider };

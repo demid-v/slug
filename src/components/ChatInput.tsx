@@ -1,9 +1,4 @@
-import {
-  createSignal,
-  type VoidComponent,
-  type Setter,
-  createEffect,
-} from "solid-js";
+import { createSignal, type VoidComponent, type Setter } from "solid-js";
 import { useSession } from "~/contexts/session";
 import { useWebSocket } from "~/contexts/web-socket";
 import { trpc } from "~/utils/trpc";
@@ -16,11 +11,49 @@ const ChatInput: VoidComponent<{
   const session = useSession();
   const webSocket = useWebSocket();
 
-  createEffect(() => 0, session?.());
-
   const [inputValue, setInputValue] = createSignal("");
 
   const createMessage = trpc.messages.createMessage.useMutation();
+
+  function sendMessage(
+    event: KeyboardEvent & {
+      currentTarget: HTMLInputElement;
+      target: Element;
+    }
+  ) {
+    if (event.key === "Enter") {
+      const text = inputValue().trim();
+
+      if (text === "") return;
+
+      setInputValue("");
+
+      const { id: userId, name = null, image = null } = session?.()?.user ?? {};
+
+      if (userId === undefined) {
+        throw new Error("Unauthorized");
+      }
+
+      const message = {
+        text,
+        userId,
+        user: { name, image },
+        channelId: props.channelId,
+      };
+
+      props.setMessages((messages) => [message, ...(messages ? messages : [])]);
+
+      createMessage.mutateAsync(message).then(() => {
+        webSocket?.()?.send(JSON.stringify(message));
+      });
+
+      if (session?.()?.user?.id === "cle65lsgx00007knk4l4y26zd") {
+        createMessage.mutate(message);
+      }
+
+      webSocket?.()?.send(JSON.stringify(message));
+    }
+  }
 
   return (
     <input
@@ -30,41 +63,7 @@ const ChatInput: VoidComponent<{
       onInput={({ target }) => {
         setInputValue((target as HTMLInputElement).value);
       }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          const text = inputValue().trim();
-
-          if (text === "") return;
-
-          setInputValue("");
-
-          const {
-            id: userId,
-            name = null,
-            image = null,
-          } = session?.()?.user ?? {};
-
-          if (userId === undefined) {
-            throw new Error("Unauthorized");
-          }
-
-          const message = {
-            text,
-            userId,
-            user: { name, image },
-            channelId: props.channelId,
-          };
-
-          props.setMessages((messages) => [
-            message,
-            ...(messages ? messages : []),
-          ]);
-
-          createMessage.mutateAsync(message).then(() => {
-            webSocket?.()?.send(JSON.stringify(message));
-          });
-        }
-      }}
+      onKeyDown={sendMessage}
     />
   );
 };

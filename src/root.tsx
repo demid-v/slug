@@ -14,8 +14,8 @@ import {
   Link,
 } from "solid-start";
 import { trpc, queryClient } from "~/utils/trpc";
-import { SessionProvider } from "./contexts/session";
-import { WebSocketProvider } from "./contexts/web-socket";
+import SessionProvider from "./contexts/session";
+import WebSocketProvider from "./contexts/web-socket";
 
 export default function Root() {
   return (
@@ -24,7 +24,7 @@ export default function Root() {
         <Title>Slug</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta name="theme-color" content="#026d56" />
+        <Meta name="theme-color" content="#ffffff" />
         <Meta name="description" content="Chat app" />
         <Link rel="icon" href="/favicon.ico" />
       </Head>

@@ -8,12 +8,19 @@ import { useWebSocket } from "~/contexts/web-socket";
 import { useSession } from "~/contexts/session";
 
 const Chat: VoidComponent = () => {
+  const navigate = useNavigate();
+
   if (useSession()?.() === null) {
-    useNavigate()("/", { replace: true });
+    navigate("/", { replace: true });
   }
 
   const paramsSplit = useParams().channel.split("/");
   const serverId = paramsSplit[0];
+
+  if (!serverId) {
+    navigate("/", { replace: true });
+  }
+
   const [channelId, setChannelId] = createSignal(paramsSplit[1]);
 
   const server = trpc.servers.getServer.useQuery(() => ({ id: serverId }));
