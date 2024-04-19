@@ -2,7 +2,7 @@
 
 ## TODO
 - [x] Deploy
-- [ ] Add upload button
+- [ ] Add auth
 - [ ] Set database
 - [ ] Add basic ui
 - [ ] Add feature to record voice
