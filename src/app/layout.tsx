@@ -3,7 +3,7 @@ import "@uploadthing/react/styles.css";
 
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { TopNav } from "~/_components/top-nav";
+import { TopNav } from "./_components/top-nav";
 
 const inter = Inter({
   subsets: ["latin"],
