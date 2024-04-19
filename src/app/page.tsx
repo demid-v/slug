@@ -9,8 +9,12 @@ export default async function HomePage() {
     <main>
       <SignedIn>
         <SlugUploadButton />
-        {voices.map((voice) => JSON.stringify(voice, null, 2))}
-        <br />
+        {voices.map((voice) => (
+          <span key={voice.id}>
+            {JSON.stringify(voice, null, 2)}
+            <br />
+          </span>
+        ))}
       </SignedIn>
     </main>
   );
