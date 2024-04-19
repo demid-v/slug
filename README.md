@@ -1,7 +1,7 @@
 # Slug
 
 ## TODO
-- [ ] Deploy
+- [x] Deploy
 - [ ] Add upload button
 - [ ] Set database
 - [ ] Add basic ui
