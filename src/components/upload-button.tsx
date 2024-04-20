@@ -1,13 +1,23 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUploadThing } from "utils/uploadthing";
 
 let mediaRecorder: MediaRecorder | null = null;
-const chunks: Blob[] = [];
 
 export const SlugUploadButton = () => {
+	const router = useRouter();
+
 	const [isRecording, setIsRecording] = useState(false);
-	const [mediaBlobUrl, setMediaBlobUrl] = useState<string>();
+
+	const { startUpload } = useUploadThing("voiceUploader", {
+		onClientUploadComplete: (res) => {
+      console.log("Upload Completed.", res);
+
+			router.refresh();
+    },
+	});
 
 	useEffect(() => {
 		if (isRecording) {
@@ -19,12 +29,11 @@ export const SlugUploadButton = () => {
 					mediaRecorder = new MediaRecorder(stream);
 					
 					mediaRecorder.ondataavailable = (e) => {
-						chunks.push(e.data);
-
-						console.log(chunks);
-						const blob = new Blob(chunks);
-						const audioURL = URL.createObjectURL(blob);
-						setMediaBlobUrl(audioURL);
+						const file = new File(
+							[e.data],
+							`${new Date().toISOString()}.mp3`,
+						);
+						void startUpload([file]);
 					};
 
 					mediaRecorder.start();
@@ -38,12 +47,15 @@ export const SlugUploadButton = () => {
 		} else {
 			mediaRecorder?.stop();
 
-			chunks.splice(0, chunks.length);
-
 			console.log(mediaRecorder?.state);
 			console.log("recorder stopped");
 		}
-	}, [isRecording])
+
+		return () => {
+			mediaRecorder?.stop();
+			mediaRecorder = null;
+		}
+	}, [isRecording, startUpload])
 
   return (
     <div>
@@ -51,7 +63,6 @@ export const SlugUploadButton = () => {
       <button onClick={() => setIsRecording((state) => !state)}>
 				{isRecording ? <span>Stop</span> : <span>Start</span>} Recording
 			</button>
-      <audio src={mediaBlobUrl} controls />
     </div>
   );
 };
