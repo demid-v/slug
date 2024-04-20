@@ -7,18 +7,22 @@ export default async function HomePage() {
   const voices = await getVoices();
 
   return (
-    <main>
-      <SignedIn>
-        <RecordButton />
-        {voices.map(([voiceId, { voice, userImg }]) => (
-          <Voice
-            key={voiceId}
-            userImg={userImg}
-            createdAt={voice.createdAt}
-            url={voice.url}
-          />
-        ))}
-      </SignedIn>
+    <main className="flex justify-center">
+      <div className="flex w-fit flex-col gap-10">
+        <SignedIn>
+          <RecordButton />
+          <div className="flex flex-col gap-5">
+            {voices.map(([voiceId, { voice, userImg }]) => (
+              <Voice
+                key={voiceId}
+                userImg={userImg}
+                createdAt={voice.createdAt}
+                url={voice.url}
+              />
+            ))}
+          </div>
+        </SignedIn>
+      </div>
     </main>
   );
 }
