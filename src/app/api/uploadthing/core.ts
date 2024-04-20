@@ -17,9 +17,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       await db.insert(voices).values({ url: file.url, userId: metadata.userId });
- 
-      return { voiceUrl: file.url };
-    }),
+     }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
