@@ -2,7 +2,7 @@
 
 ## TODO
 - [x] Deploy
-- [ ] Add auth
-- [ ] Set database
+- [x] Add auth
+- [x] Set database
 - [ ] Add basic ui
 - [ ] Add feature to record voice
