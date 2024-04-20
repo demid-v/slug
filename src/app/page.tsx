@@ -4,11 +4,16 @@ import { SlugUploadButton } from "~/components/upload-button";
 import { db } from "~/server/db";
 
 export default async function HomePage() {
-  const voices = await db.query.voices.findMany();
-  const users = await Promise.allSettled(voices.map((voice) => clerkClient.users.getUser(voice.userId)));
+  const voices = await db.query.voices.findMany({
+    orderBy: (voices, { desc }) => [desc(voices.createdAt)],
+  });
+  const users = await Promise.allSettled(voices.map(
+    (voice) => clerkClient.users.getUser(voice.userId)
+  ));
   
-  const fulfilledUsers = users.filter((user) => user.status === "fulfilled") as PromiseFulfilledResult<User>[];
-  const findUserImg = (userId: string) => fulfilledUsers.find((user) => user.value.id === userId)?.value.imageUrl
+  const findUserImg = (userId: string) => (users.find(
+    (user) => user.status === "fulfilled" && user.value.id === userId
+  ) as PromiseFulfilledResult<User> | undefined)?.value.imageUrl;
   
   return (
     <main>
@@ -17,6 +22,7 @@ export default async function HomePage() {
         {voices.map((voice) => (
           <div key={voice.id}>
             <img src={findUserImg(voice.userId)} className="w-8 h-8 rounded-full" />
+            <p>{voice.createdAt.toLocaleTimeString()}</p>
             <audio src={voice.url} controls />
           </div>
         ))}
