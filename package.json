@@ -20,6 +20,7 @@
     "postgres": "^3.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-media-recorder": "^1.6.6",
     "uploadthing": "^6.9.0",
     "zod": "^3.22.4"
   },
