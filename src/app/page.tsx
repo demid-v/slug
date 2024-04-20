@@ -10,10 +10,9 @@ export default async function HomePage() {
       <SignedIn>
         <SlugUploadButton />
         {voices.map((voice) => (
-          <span key={voice.id}>
+          <p key={voice.id}>
             {JSON.stringify(voice, null, 2)}
-            <br />
-          </span>
+          </p>
         ))}
       </SignedIn>
     </main>
