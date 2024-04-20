@@ -1,6 +1,7 @@
 # Slug
 
 ## TODO
+
 - [x] Deploy
 - [x] Add auth
 - [x] Set database
