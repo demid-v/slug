@@ -3,10 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUploadThing } from "utils/uploadthing";
+import { Button } from "./ui/button";
 
 let mediaRecorder: MediaRecorder | null = null;
 
-export const SlugUploadButton = () => {
+export const RecordButton = () => {
   const router = useRouter();
 
   const [isRecording, setIsRecording] = useState(false);
@@ -55,11 +56,8 @@ export const SlugUploadButton = () => {
   }, [isRecording, startUpload]);
 
   return (
-    <div>
-      <p>{isRecording}</p>
-      <button onClick={() => setIsRecording((state) => !state)}>
-        {isRecording ? <span>Stop</span> : <span>Start</span>} Recording
-      </button>
-    </div>
+    <Button onClick={() => setIsRecording((state) => !state)}>
+      {isRecording ? "Stop Recording" : "Start Recording"}
+    </Button>
   );
 };

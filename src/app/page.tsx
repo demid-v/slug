@@ -1,5 +1,5 @@
 import { SignedIn } from "@clerk/nextjs";
-import { SlugUploadButton } from "~/components/upload-button";
+import { RecordButton } from "~/components/upload-button";
 import { Voice } from "~/components/voice";
 import { getVoices } from "~/server/db/actions";
 
@@ -9,7 +9,7 @@ export default async function HomePage() {
   return (
     <main>
       <SignedIn>
-        <SlugUploadButton />
+        <RecordButton />
         {voices.map(([voiceId, { voice, userImg }]) => (
           <Voice
             key={voiceId}
