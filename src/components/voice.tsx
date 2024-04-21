@@ -84,7 +84,7 @@ export const Voice = ({
             alt="Profile pic"
             width={20}
             height={20}
-            className="self-end rounded-full"
+            className="self-center rounded-full"
           />
         )}
         <Button
@@ -92,9 +92,9 @@ export const Voice = ({
           onClick={toggleVoiceState}
         >
           {isPlaying ? (
-            <Pause width={20} height={20} />
+            <Pause width={16} height={16} />
           ) : (
-            <Play width={20} height={20} />
+            <Play width={16} height={16} />
           )}
         </Button>
       </div>
