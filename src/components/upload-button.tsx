@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useUploadThing } from "utils/uploadthing";
+import { useUploadThing } from "~/utils/uploadthing";
 import { Button } from "./ui/button";
 
 let mediaRecorder: MediaRecorder | null = null;
