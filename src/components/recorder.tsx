@@ -86,9 +86,12 @@ const usePusher = () => {
     });
 
     const channel = pusher.subscribe("chat-messages");
-    channel.bind("message", () => {
-      router.refresh();
-    });
+    channel.bind("message", () => router.refresh());
+
+    return () => {
+      pusher?.unsubscribe("chat-messages");
+      channel.unbind_all();
+    };
   }, [router]);
 };
 
