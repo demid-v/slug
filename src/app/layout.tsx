@@ -28,7 +28,9 @@ export default function RootLayout({
           className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
         >
           <TopNav />
-          {children}
+          <main className="mx-auto flex flex-col items-center pb-16 pt-7">
+            {children}
+          </main>
         </body>
       </html>
     </ClerkProvider>

@@ -5,7 +5,7 @@ export const TopNav = () => {
   return (
     <nav className="flex h-14 items-center justify-between px-4">
       <div className="flex items-center gap-3 font-bold">
-        <SlugIcon />
+        <SlugIcon width={32} height={32} />
         <span className="cursor-default">Slug</span>
       </div>
       <SignedOut>
