@@ -1,25 +1,38 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "./ui/button";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 
-export const Voice = ({
-  userImg,
-  createdAt,
-  url,
-}: {
-  userImg: string | undefined;
-  createdAt: Date;
-  url: string;
-}) => {
+const useVoice = (
+  url: string,
+  duration: number | null,
+  setIsPlaying: Dispatch<SetStateAction<boolean>>,
+  setDuration: Dispatch<SetStateAction<number | null>>,
+  setCurrentTime: Dispatch<SetStateAction<number | null>>,
+  setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
+  createdAt: Date,
+) => {
   const audio = useRef<HTMLAudioElement | null>(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState<number | null>(null);
-  const [currentTime, setCurrentTime] = useState<number | null>(0);
-  const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
+  const toggleVoiceState = () => {
+    if (audio.current === null) {
+      return;
+    }
+
+    if (audio.current.paused) {
+      void audio.current.play();
+    } else {
+      audio.current.pause();
+    }
+  };
 
   useEffect(() => {
     if (audio.current !== null) {
@@ -64,23 +77,38 @@ export const Voice = ({
       currentAudio.removeEventListener("timeupdate", timeUpdateListener);
       currentAudio.removeEventListener("ended", ended);
     };
-  }, [duration]);
-
-  const toggleVoiceState = () => {
-    if (audio.current === null) {
-      return;
-    }
-
-    if (audio.current.paused) {
-      void audio.current.play();
-    } else {
-      audio.current.pause();
-    }
-  };
+  }, [duration, setIsPlaying, setDuration, setCurrentTime]);
 
   useEffect(() => {
     setLocaleCreatedAt(createdAt.toLocaleTimeString());
-  }, [createdAt]);
+  }, [setLocaleCreatedAt, createdAt]);
+
+  return toggleVoiceState;
+};
+
+export const Voice = ({
+  userImg,
+  createdAt,
+  url,
+}: {
+  userImg: string | undefined;
+  createdAt: Date;
+  url: string;
+}) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState<number | null>(null);
+  const [currentTime, setCurrentTime] = useState<number | null>(0);
+  const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
+
+  const toggleVoiceState = useVoice(
+    url,
+    duration,
+    setIsPlaying,
+    setDuration,
+    setCurrentTime,
+    setLocaleCreatedAt,
+    createdAt,
+  );
 
   return (
     <div>
