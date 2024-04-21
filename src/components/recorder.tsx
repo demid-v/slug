@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import { useUploadThing } from "~/utils/uploadthing";
 import { Button } from "./ui/button";
 import { Mic, Radio } from "lucide-react";
+import Pusher from "pusher-js";
+import { env } from "~/env";
 
 let mediaRecorder: MediaRecorder | null = null;
+let pusher: Pusher | null = null;
 
 export const Recorder = () => {
   const router = useRouter();
@@ -73,6 +76,21 @@ export const Recorder = () => {
       mediaRecorder?.stop();
     };
   }, [isRecording, startUpload]);
+
+  useEffect(() => {
+    if (pusher !== null) {
+      return;
+    }
+
+    pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: "eu",
+    });
+
+    const channel = pusher.subscribe("chat-messages");
+    channel.bind("message", () => {
+      router.refresh();
+    });
+  }, [router]);
 
   return (
     <div className="flex items-center justify-start gap-5 px-2">
