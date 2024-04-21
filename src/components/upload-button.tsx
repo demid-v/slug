@@ -22,37 +22,55 @@ export const RecordButton = () => {
   });
 
   useEffect(() => {
-    if (isRecording) {
-      const constraints = { audio: true };
+    const dataAvailable = (e: BlobEvent) => {
+      const file = new File([e.data], `${new Date().toISOString()}.mp3`);
+      void startUpload([file]);
+    };
 
+    const start = () => {
+      console.log(mediaRecorder?.state);
+      console.log("recorder started");
+    };
+
+    const stop = () => {
+      console.log(mediaRecorder?.state);
+      console.log("recorder stopped");
+
+      if (mediaRecorder === null) {
+        return;
+      }
+
+      mediaRecorder.stream.getTracks().forEach((track) => {
+        track.stop();
+      });
+
+      mediaRecorder.removeEventListener("dataavailable", dataAvailable);
+      mediaRecorder.removeEventListener("start", start);
+      mediaRecorder.removeEventListener("stop", stop);
+
+      mediaRecorder = null;
+    };
+
+    if (isRecording) {
       navigator.mediaDevices
-        .getUserMedia(constraints)
+        .getUserMedia({ audio: true })
         .then((stream) => {
+          console.log("new MediaRecorder");
           mediaRecorder = new MediaRecorder(stream);
 
-          mediaRecorder.ondataavailable = (e) => {
-            const file = new File([e.data], `${new Date().toISOString()}.mp3`);
-            void startUpload([file]);
-          };
+          mediaRecorder.addEventListener("dataavailable", dataAvailable);
+          mediaRecorder.addEventListener("start", start);
+          mediaRecorder.addEventListener("stop", stop);
 
           mediaRecorder.start();
-
-          console.log(mediaRecorder.state);
-          console.log("recorder started");
         })
         .catch((err) => {
           console.error(err);
         });
-    } else {
-      mediaRecorder?.stop();
-
-      console.log(mediaRecorder?.state);
-      console.log("recorder stopped");
     }
 
     return () => {
       mediaRecorder?.stop();
-      mediaRecorder = null;
     };
   }, [isRecording, startUpload]);
 
