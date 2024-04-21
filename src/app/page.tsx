@@ -7,11 +7,10 @@ export default async function HomePage() {
   const voices = await getVoices();
 
   return (
-    <main className="flex justify-center">
-      <div className="flex w-fit flex-col gap-10">
+    <main className="flex justify-center pt-7">
+      <div className="flex w-80 flex-col gap-8">
         <SignedIn>
-          <RecordButton />
-          <div className="flex flex-col gap-5">
+          <div className="flex max-h-96 flex-col-reverse gap-3 overflow-y-scroll border px-4 py-2">
             {voices.map(([voiceId, { voice, userImg }]) => (
               <Voice
                 key={voiceId}
@@ -21,6 +20,7 @@ export default async function HomePage() {
               />
             ))}
           </div>
+          <RecordButton />
         </SignedIn>
       </div>
     </main>

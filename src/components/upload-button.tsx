@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUploadThing } from "~/utils/uploadthing";
 import { Button } from "./ui/button";
+import { Mic } from "lucide-react";
 
 let mediaRecorder: MediaRecorder | null = null;
 
@@ -56,8 +57,14 @@ export const RecordButton = () => {
   }, [isRecording, startUpload]);
 
   return (
-    <Button onClick={() => setIsRecording((state) => !state)}>
-      {isRecording ? "Stop Recording" : "Start Recording"}
-    </Button>
+    <div className="flex items-center justify-start gap-5 px-2">
+      <Button
+        onClick={() => setIsRecording((state) => !state)}
+        className="h-auto w-auto rounded-full py-4"
+      >
+        <Mic />
+      </Button>
+      {isRecording ? <span>Stop Recording</span> : <span>Start Recording</span>}
+    </div>
   );
 };

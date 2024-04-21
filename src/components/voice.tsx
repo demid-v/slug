@@ -17,7 +17,7 @@ export const Voice = ({
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);
-  const [localeCreatedAt, setLocaleCreatedAt] = useState("");
+  const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
 
   useEffect(() => {
     if (audio.current !== null) {
@@ -77,13 +77,17 @@ export const Voice = ({
   return (
     <div>
       <Button
-        className="h-auto w-auto rounded-full py-4"
+        className="h-auto w-auto rounded-full p-2.5"
         onClick={toggleVoiceState}
       >
-        {isPlaying ? <Pause /> : <Play />}
+        {isPlaying ? (
+          <Pause width={20} height={20} />
+        ) : (
+          <Play width={20} height={20} />
+        )}
       </Button>
-      <p>{duration}</p>
-      <p>{localeCreatedAt}</p>
+      <p className="text-xs">{duration ?? "Loading..."}</p>
+      <p className="text-xs">{localeCreatedAt}</p>
     </div>
   );
 };
