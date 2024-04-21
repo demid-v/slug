@@ -18,6 +18,7 @@ export const Voice = ({
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);
+  const [currentTime, setCurrentTime] = useState<number | null>(0);
   const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
 
   useEffect(() => {
@@ -37,25 +38,31 @@ export const Voice = ({
     }
 
     const playListener = () => setIsPlaying(true);
-    currentAudio.addEventListener("play", playListener);
-
     const pauseListener = () => setIsPlaying(false);
-    currentAudio.addEventListener("pause", pauseListener);
-
     const timeUpdateListener = () => {
-      if (audio.current === null || duration !== null) {
+      if (audio.current === null) {
         return;
       }
 
-      setDuration(audio.current.duration);
-      audio.current.currentTime = 0;
+      if (duration === null) {
+        setDuration(Math.round(audio.current.duration));
+        audio.current.currentTime = 0;
+      }
+
+      setCurrentTime(Math.round(audio.current.currentTime));
     };
+    const ended = () => setCurrentTime(0);
+
+    currentAudio.addEventListener("play", playListener);
+    currentAudio.addEventListener("pause", pauseListener);
     currentAudio.addEventListener("timeupdate", timeUpdateListener);
+    currentAudio.addEventListener("ended", ended);
 
     return () => {
       currentAudio.removeEventListener("play", playListener);
       currentAudio.removeEventListener("pause", pauseListener);
       currentAudio.removeEventListener("timeupdate", timeUpdateListener);
+      currentAudio.removeEventListener("ended", ended);
     };
   }, [duration]);
 
@@ -100,7 +107,15 @@ export const Voice = ({
       </div>
       <div className="flex justify-between pt-1">
         <span className="flex gap-1">
-          <span className="text-xs">{duration ?? "Loading..."}</span>
+          <span className="text-xs">
+            {duration !== null ? (
+              <>
+                {currentTime}/{duration}
+              </>
+            ) : (
+              "Loading..."
+            )}
+          </span>
         </span>
         <span className="text-xs">{localeCreatedAt}</span>
       </div>
