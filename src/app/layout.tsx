@@ -4,6 +4,7 @@ import "@uploadthing/react/styles.css";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TopNav } from "./_components/top-nav";
+import { type ReactNode } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,11 +17,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
       <html lang="en">
