@@ -1,7 +1,7 @@
 import { SignedIn } from "@clerk/nextjs";
 import { Recorder } from "~/components/recorder";
 import { Voice } from "~/components/voice";
-import { getVoices } from "~/server/db/actions";
+import { getVoices } from "~/server/actions";
 
 export default async function HomePage() {
   const voices = await getVoices();
