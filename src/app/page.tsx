@@ -10,7 +10,7 @@ export default async function HomePage() {
     <main className="flex justify-center pt-7">
       <div className="flex w-80 flex-col gap-8">
         <SignedIn>
-          <div className="flex max-h-96 flex-col-reverse gap-3 overflow-y-scroll border px-4 py-2">
+          <div className="flex h-96 flex-col-reverse gap-5 overflow-y-auto border px-4 py-2">
             {voices.map(([voiceId, { voice, userImg }]) => (
               <Voice
                 key={voiceId}

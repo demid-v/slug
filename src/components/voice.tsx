@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Pause, Play } from "lucide-react";
+import Image from "next/image";
 
 export const Voice = ({
   userImg,
@@ -76,18 +77,33 @@ export const Voice = ({
 
   return (
     <div>
-      <Button
-        className="h-auto w-auto rounded-full p-2.5"
-        onClick={toggleVoiceState}
-      >
-        {isPlaying ? (
-          <Pause width={20} height={20} />
-        ) : (
-          <Play width={20} height={20} />
+      <div className="flex gap-1.5">
+        {typeof userImg !== "undefined" && (
+          <Image
+            src={userImg}
+            alt="Profile pic"
+            width={20}
+            height={20}
+            className="self-end rounded-full"
+          />
         )}
-      </Button>
-      <p className="text-xs">{duration ?? "Loading..."}</p>
-      <p className="text-xs">{localeCreatedAt}</p>
+        <Button
+          className="h-auto w-auto rounded-full p-2.5"
+          onClick={toggleVoiceState}
+        >
+          {isPlaying ? (
+            <Pause width={20} height={20} />
+          ) : (
+            <Play width={20} height={20} />
+          )}
+        </Button>
+      </div>
+      <div className="flex justify-between pt-1">
+        <span className="flex gap-1">
+          <span className="text-xs">{duration ?? "Loading..."}</span>
+        </span>
+        <span className="text-xs">{localeCreatedAt}</span>
+      </div>
     </div>
   );
 };
