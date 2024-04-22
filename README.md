@@ -9,4 +9,4 @@
 - [x] Add feature to record voice
 - [x] Add live syncing messages with other users
 - [ ] Add audio visualizer
-- [ ] Add ratelimiter
+- [x] Add ratelimit
