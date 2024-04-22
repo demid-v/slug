@@ -10,7 +10,6 @@ import { env } from "~/env";
 import { useUploadThing } from "~/utils/uploadthing";
 
 let mediaRecorder: MediaRecorder | null = null;
-let pusher: Pusher | null = null;
 
 const useRecorder = (
   isRecording: boolean,
@@ -73,13 +72,12 @@ const usePusher = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (pusher !== null) return;
-
-    pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
+    const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: "eu",
     });
 
     const channel = pusher.subscribe("chat-messages");
+
     channel.bind("message", () => router.refresh());
 
     return () => {
