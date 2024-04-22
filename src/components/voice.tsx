@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { AudioVisualizer } from "react-audio-visualize";
 
 const useVoice = (
   url: string,
@@ -51,7 +52,7 @@ const useVoice = (
         audio.current.currentTime = 0;
       }
 
-      setCurrentTime(Math.round(audio.current.currentTime));
+      setCurrentTime(audio.current.currentTime);
     };
     const ended = () => setCurrentTime(0);
 
@@ -74,6 +75,35 @@ const useVoice = (
   );
 
   return toggleVoiceState;
+};
+
+const useAudioVisualizer = (url: string) => {
+  const isFetchingAudioBlob = useRef(false);
+  const [audioBlob, setAudioBlob] = useState<Blob>();
+
+  const visualizerRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (isFetchingAudioBlob.current) return;
+
+    isFetchingAudioBlob.current = true;
+
+    fetch(url)
+      .then((res) => {
+        res
+          .blob()
+          .then((blob) => {
+            setAudioBlob(blob);
+          })
+          .catch(console.error);
+      })
+      .catch(console.error)
+      .finally(() => {
+        isFetchingAudioBlob.current = false;
+      });
+  }, [url]);
+
+  return { audioBlob, visualizerRef: visualizerRef.current };
 };
 
 export const Voice = ({
@@ -100,6 +130,8 @@ export const Voice = ({
     createdAt,
   );
 
+  const { audioBlob, visualizerRef } = useAudioVisualizer(url);
+
   return (
     <div>
       <div className="flex gap-1.5">
@@ -122,16 +154,29 @@ export const Voice = ({
             <Play width={16} height={16} />
           )}
         </Button>
+        {audioBlob && (
+          <AudioVisualizer
+            ref={visualizerRef}
+            blob={audioBlob}
+            width={282}
+            height={36}
+            barWidth={3}
+            gap={5}
+            barColor="#0369a1"
+            barPlayedColor="#94a3b8"
+            currentTime={currentTime}
+          />
+        )}
       </div>
       <div className="flex justify-between pt-1">
         <span className="flex gap-1">
           <span className="text-xs">
-            {duration !== null ? (
-              <>
-                {currentTime}/{duration}
-              </>
-            ) : (
+            {currentTime === null || duration === null ? (
               "Loading..."
+            ) : (
+              <>
+                {Math.round(currentTime)}/{duration}
+              </>
             )}
           </span>
         </span>
