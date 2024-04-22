@@ -94,13 +94,19 @@ export const Recorder = () => {
 
   const [isRecording, setIsRecording] = useState(false);
 
-  const { startUpload } = useUploadThing("voiceUploader", {
+  const { startUpload, isUploading } = useUploadThing("voiceUploader", {
     onClientUploadComplete: (res) => {
       console.log("Upload Completed.", res);
 
       router.refresh();
     },
   });
+
+  const recorderText = (() => {
+    if (isRecording) return "Stop Recording";
+    if (isUploading) return "Uploading...";
+    return "Start Recording";
+  })();
 
   useRecorder(isRecording, startUpload);
   usePusher();
@@ -110,12 +116,11 @@ export const Recorder = () => {
       <Button
         onClick={() => setIsRecording((state) => !state)}
         className="h-auto w-auto rounded-full p-3"
+        disabled={isUploading}
       >
         {isRecording ? <Radio /> : <Mic />}
       </Button>
-      <span className="text-lg font-medium">
-        {isRecording ? "Stop Recording" : "Start Recording"}
-      </span>
+      <span className="text-lg font-medium">{recorderText}</span>
     </div>
   );
 };
