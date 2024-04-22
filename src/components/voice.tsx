@@ -23,21 +23,14 @@ const useVoice = (
   const audio = useRef<HTMLAudioElement | null>(null);
 
   const toggleVoiceState = () => {
-    if (audio.current === null) {
-      return;
-    }
+    if (audio.current === null) return;
 
-    if (audio.current.paused) {
-      void audio.current.play();
-    } else {
-      audio.current.pause();
-    }
+    if (audio.current.paused) void audio.current.play();
+    else audio.current.pause();
   };
 
   useEffect(() => {
-    if (audio.current !== null) {
-      return;
-    }
+    if (audio.current !== null) return;
 
     audio.current = new Audio(url);
     audio.current.currentTime = 1e101;
@@ -46,16 +39,12 @@ const useVoice = (
   useEffect(() => {
     const currentAudio = audio.current;
 
-    if (currentAudio === null) {
-      return;
-    }
+    if (currentAudio === null) return;
 
     const playListener = () => setIsPlaying(true);
     const pauseListener = () => setIsPlaying(false);
     const timeUpdateListener = () => {
-      if (audio.current === null) {
-        return;
-      }
+      if (audio.current === null) return;
 
       if (duration === null) {
         setDuration(Math.round(audio.current.duration));
@@ -79,9 +68,10 @@ const useVoice = (
     };
   }, [duration, setIsPlaying, setDuration, setCurrentTime]);
 
-  useEffect(() => {
-    setLocaleCreatedAt(createdAt.toLocaleTimeString());
-  }, [setLocaleCreatedAt, createdAt]);
+  useEffect(
+    () => setLocaleCreatedAt(createdAt.toLocaleTimeString()),
+    [setLocaleCreatedAt, createdAt],
+  );
 
   return toggleVoiceState;
 };

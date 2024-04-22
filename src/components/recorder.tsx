@@ -34,9 +34,7 @@ const useRecorder = (
       console.log(mediaRecorder?.state);
       console.log("recorder stopped");
 
-      if (mediaRecorder === null) {
-        return;
-      }
+      if (mediaRecorder === null) return;
 
       mediaRecorder.stream.getTracks().forEach((track) => {
         track.stop();
@@ -67,9 +65,7 @@ const useRecorder = (
         });
     }
 
-    return () => {
-      mediaRecorder?.stop();
-    };
+    return () => mediaRecorder?.stop();
   }, [isRecording, startUpload]);
 };
 
@@ -77,9 +73,7 @@ const usePusher = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (pusher !== null) {
-      return;
-    }
+    if (pusher !== null) return;
 
     pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: "eu",
