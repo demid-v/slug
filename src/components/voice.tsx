@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "./ui/button";
+import { Pause, Play } from "lucide-react";
+import Image from "next/image";
 import {
   type Dispatch,
   type SetStateAction,
@@ -7,9 +10,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "./ui/button";
-import { Pause, Play } from "lucide-react";
-import Image from "next/image";
 
 const useVoice = (
   url: string,
