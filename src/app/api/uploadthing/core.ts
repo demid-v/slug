@@ -5,6 +5,7 @@ import { UploadThingError } from "uploadthing/server";
 import { env } from "~/env";
 import { db } from "~/server/db";
 import { voices } from "~/server/db/schema";
+import { ratelimit } from "~/server/ratelimit";
 
 const f = createUploadthing();
 
@@ -18,10 +19,12 @@ const pusher = new Pusher({
 
 export const ourFileRouter = {
   voiceUploader: f({ audio: { maxFileSize: "4MB" } })
-    .middleware(() => {
+    .middleware(async () => {
       const { userId } = auth();
-
       if (!userId) throw new UploadThingError("Unauthorized");
+
+      const { success } = await ratelimit.limit(userId);
+      if (!success) throw new UploadThingError("Too many requests");
 
       return { userId };
     })
