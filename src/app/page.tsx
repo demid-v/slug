@@ -5,9 +5,9 @@ export default async function HomePage() {
   return (
     <>
       <SlugIcon width={512} height={512} />
-      <h1 className="text-5xl font-semibold">
-        Welcome to{" "}
-        <Link href="/chat" className="underline">
+      <h1 className="text-5xl">
+        <span className="font-semibold">Welcome to </span>
+        <Link href="/chat" className="font-bold">
           Slug
         </Link>
       </h1>
