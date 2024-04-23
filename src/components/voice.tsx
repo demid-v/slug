@@ -14,10 +14,10 @@ import { AudioVisualizer } from "react-audio-visualize";
 
 const useVoice = (
   url: string,
-  duration: number | null,
+  duration: number | undefined,
   setIsPlaying: Dispatch<SetStateAction<boolean>>,
-  setDuration: Dispatch<SetStateAction<number | null>>,
-  setCurrentTime: Dispatch<SetStateAction<number | null>>,
+  setDuration: Dispatch<SetStateAction<number | undefined>>,
+  setCurrentTime: Dispatch<SetStateAction<number>>,
   setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
   createdAt: Date,
 ) => {
@@ -47,7 +47,7 @@ const useVoice = (
     const timeUpdateListener = () => {
       if (audio.current === null) return;
 
-      if (duration === null) {
+      if (typeof duration === "undefined") {
         setDuration(Math.round(audio.current.duration));
         audio.current.currentTime = 0;
       }
@@ -75,6 +75,27 @@ const useVoice = (
   );
 
   return toggleVoiceState;
+};
+
+const formatTime = (time: number | undefined) => {
+  if (typeof time === "undefined") return "0:00";
+
+  const minutes = Math.floor(time / 60)
+    .toString()
+    .padStart(1, "0");
+  const seconds = Math.round(time % 60)
+    .toString()
+    .padStart(2, "0");
+
+  return `${minutes}:${seconds}`;
+};
+
+const useAudioTime = (
+  duration: number | undefined,
+  currentTime: number,
+  isPlaying: boolean,
+) => {
+  return isPlaying ? formatTime(currentTime) : formatTime(duration);
 };
 
 const useAudioVisualizer = (url: string) => {
@@ -116,8 +137,8 @@ export const Voice = ({
   url: string;
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState<number | null>(null);
-  const [currentTime, setCurrentTime] = useState<number | null>(0);
+  const [duration, setDuration] = useState<number>();
+  const [currentTime, setCurrentTime] = useState<number>(0);
   const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
 
   const toggleVoiceState = useVoice(
@@ -129,6 +150,8 @@ export const Voice = ({
     setLocaleCreatedAt,
     createdAt,
   );
+
+  const audioTime = useAudioTime(duration, currentTime, isPlaying);
 
   const { audioBlob, visualizerRef } = useAudioVisualizer(url);
 
@@ -170,15 +193,7 @@ export const Voice = ({
       </div>
       <div className="flex justify-between pt-1">
         <span className="flex gap-1">
-          <span className="text-xs">
-            {currentTime === null || duration === null ? (
-              "Loading..."
-            ) : (
-              <>
-                {Math.round(currentTime)}/{duration}
-              </>
-            )}
-          </span>
+          <span className="text-xs">{audioTime}</span>
         </span>
         <span className="text-xs">{localeCreatedAt}</span>
       </div>
