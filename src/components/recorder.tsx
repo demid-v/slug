@@ -24,15 +24,7 @@ const useRecorder = (
       void startUpload([file]);
     };
 
-    const start = () => {
-      console.log(mediaRecorder?.state);
-      console.log("recorder started");
-    };
-
     const stop = () => {
-      console.log(mediaRecorder?.state);
-      console.log("recorder stopped");
-
       if (mediaRecorder === null) return;
 
       mediaRecorder.stream.getTracks().forEach((track) => {
@@ -40,7 +32,6 @@ const useRecorder = (
       });
 
       mediaRecorder.removeEventListener("dataavailable", dataAvailable);
-      mediaRecorder.removeEventListener("start", start);
       mediaRecorder.removeEventListener("stop", stop);
 
       mediaRecorder = null;
@@ -50,11 +41,9 @@ const useRecorder = (
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
-          console.log("new MediaRecorder");
           mediaRecorder = new MediaRecorder(stream);
 
           mediaRecorder.addEventListener("dataavailable", dataAvailable);
-          mediaRecorder.addEventListener("start", start);
           mediaRecorder.addEventListener("stop", stop);
 
           mediaRecorder.start();
@@ -77,7 +66,6 @@ const usePusher = () => {
     });
 
     const channel = pusher.subscribe("chat-messages");
-
     channel.bind("message", () => router.refresh());
 
     return () => {
@@ -101,9 +89,9 @@ export const Recorder = () => {
   });
 
   const recorderText = (() => {
-    if (isRecording) return "Stop Recording";
+    if (isRecording) return "Stop recording";
     if (isUploading) return "Uploading...";
-    return "Start Recording";
+    return "Start recording";
   })();
 
   useRecorder(isRecording, startUpload);

@@ -7,7 +7,7 @@ export default async function Chat() {
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">
-      <div className="flex h-full flex-col-reverse gap-3 overflow-y-auto border px-4 py-2">
+      <div className="flex h-full flex-col-reverse gap-3 overflow-y-auto border p-4">
         {voices.map(([voiceId, { voice, userImg }]) => (
           <Voice
             key={voiceId}
