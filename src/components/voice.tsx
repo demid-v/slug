@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { AudioVisualizer } from "react-audio-visualize";
+import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 
 const useVoice = (
   url: string,
@@ -21,51 +21,51 @@ const useVoice = (
   setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
   createdAt: Date,
 ) => {
-  const audio = useRef<HTMLAudioElement | null>(null);
+  const voice = useRef<HTMLAudioElement | null>(null);
 
   const toggleVoiceState = () => {
-    if (audio.current === null) return;
+    if (voice.current === null) return;
 
-    if (audio.current.paused) void audio.current.play();
-    else audio.current.pause();
+    if (voice.current.paused) void voice.current.play();
+    else voice.current.pause();
   };
 
   useEffect(() => {
-    if (audio.current !== null) return;
+    if (voice.current !== null) return;
 
-    audio.current = new Audio(url);
-    audio.current.currentTime = 1e101;
+    voice.current = new Audio(url);
+    voice.current.currentTime = 1e101;
   }, [url]);
 
   useEffect(() => {
-    const currentAudio = audio.current;
+    const currentVoice = voice.current;
 
-    if (currentAudio === null) return;
+    if (currentVoice === null) return;
 
     const playListener = () => setIsPlaying(true);
     const pauseListener = () => setIsPlaying(false);
     const timeUpdateListener = () => {
-      if (audio.current === null) return;
+      if (voice.current === null) return;
 
       if (typeof duration === "undefined") {
-        setDuration(Math.round(audio.current.duration));
-        audio.current.currentTime = 0;
+        setDuration(Math.round(voice.current.duration));
+        voice.current.currentTime = 0;
       }
 
-      setCurrentTime(audio.current.currentTime);
+      setCurrentTime(voice.current.currentTime);
     };
     const ended = () => setCurrentTime(0);
 
-    currentAudio.addEventListener("play", playListener);
-    currentAudio.addEventListener("pause", pauseListener);
-    currentAudio.addEventListener("timeupdate", timeUpdateListener);
-    currentAudio.addEventListener("ended", ended);
+    currentVoice.addEventListener("play", playListener);
+    currentVoice.addEventListener("pause", pauseListener);
+    currentVoice.addEventListener("timeupdate", timeUpdateListener);
+    currentVoice.addEventListener("ended", ended);
 
     return () => {
-      currentAudio.removeEventListener("play", playListener);
-      currentAudio.removeEventListener("pause", pauseListener);
-      currentAudio.removeEventListener("timeupdate", timeUpdateListener);
-      currentAudio.removeEventListener("ended", ended);
+      currentVoice.removeEventListener("play", playListener);
+      currentVoice.removeEventListener("pause", pauseListener);
+      currentVoice.removeEventListener("timeupdate", timeUpdateListener);
+      currentVoice.removeEventListener("ended", ended);
     };
   }, [duration, setIsPlaying, setDuration, setCurrentTime]);
 
@@ -90,7 +90,7 @@ const formatTime = (time: number | undefined) => {
   return `${minutes}:${seconds}`;
 };
 
-const useAudioTime = (
+const useVoiceTime = (
   duration: number | undefined,
   currentTime: number,
   isPlaying: boolean,
@@ -98,33 +98,33 @@ const useAudioTime = (
   return isPlaying ? formatTime(currentTime) : formatTime(duration);
 };
 
-const useAudioVisualizer = (url: string) => {
-  const isFetchingAudioBlob = useRef(false);
-  const [audioBlob, setAudioBlob] = useState<Blob>();
+const useVoiceVisualizer = (url: string) => {
+  const isFetchingVoiceBlob = useRef(false);
+  const [voiceBlob, setVoiceBlob] = useState<Blob>();
 
-  const visualizerRef = useRef<HTMLCanvasElement>(null);
+  const voiceVisualizer = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (isFetchingAudioBlob.current) return;
+    if (isFetchingVoiceBlob.current) return;
 
-    isFetchingAudioBlob.current = true;
+    isFetchingVoiceBlob.current = true;
 
     fetch(url)
       .then((res) => {
         res
           .blob()
           .then((blob) => {
-            setAudioBlob(blob);
+            setVoiceBlob(blob);
           })
           .catch(console.error);
       })
       .catch(console.error)
       .finally(() => {
-        isFetchingAudioBlob.current = false;
+        isFetchingVoiceBlob.current = false;
       });
   }, [url]);
 
-  return { audioBlob, visualizerRef: visualizerRef.current };
+  return { voiceBlob, voiceVisualizer: voiceVisualizer.current };
 };
 
 export const Voice = ({
@@ -151,9 +151,9 @@ export const Voice = ({
     createdAt,
   );
 
-  const audioTime = useAudioTime(duration, currentTime, isPlaying);
+  const voiceTime = useVoiceTime(duration, currentTime, isPlaying);
 
-  const { audioBlob, visualizerRef } = useAudioVisualizer(url);
+  const { voiceBlob, voiceVisualizer } = useVoiceVisualizer(url);
 
   return (
     <div>
@@ -177,10 +177,10 @@ export const Voice = ({
             <Play width={16} height={16} />
           )}
         </Button>
-        {audioBlob && (
-          <AudioVisualizer
-            ref={visualizerRef}
-            blob={audioBlob}
+        {voiceBlob && (
+          <VoiceVisualizer
+            ref={voiceVisualizer}
+            blob={voiceBlob}
             width={282}
             height={36}
             barWidth={3}
@@ -193,7 +193,7 @@ export const Voice = ({
       </div>
       <div className="flex justify-between pt-1">
         <span className="flex gap-1">
-          <span className="text-xs">{audioTime}</span>
+          <span className="text-xs">{voiceTime}</span>
         </span>
         <span className="text-xs">{localeCreatedAt}</span>
       </div>

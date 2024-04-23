@@ -8,5 +8,5 @@
 - [x] Add basic ui
 - [x] Add feature to record voice
 - [x] Add live syncing messages with other users
-- [ ] Add audio visualizer
+- [x] Add voice visualizer
 - [x] Add ratelimit
