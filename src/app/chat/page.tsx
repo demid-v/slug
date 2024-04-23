@@ -1,23 +1,12 @@
-import { Recorder } from "~/components/recorder";
-import { Voice } from "~/components/voice";
+import { Chat } from "../_components/chat";
 import { getVoices } from "~/server/actions";
 
-export default async function Chat() {
+export default async function ChatPage() {
   const voices = await getVoices();
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">
-      <div className="flex h-full flex-col-reverse gap-3 overflow-y-auto border p-4">
-        {voices.map(([voiceId, { voice, userImg }]) => (
-          <Voice
-            key={voiceId}
-            userImg={userImg}
-            createdAt={voice.createdAt}
-            url={voice.url}
-          />
-        ))}
-      </div>
-      <Recorder />
+      <Chat voices={voices} />
     </div>
   );
 }

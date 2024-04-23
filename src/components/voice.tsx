@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "./ui/button";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
@@ -124,17 +122,21 @@ const useVoiceVisualizer = (url: string) => {
       });
   }, [url]);
 
-  return { voiceBlob, voiceVisualizer: voiceVisualizer.current };
+  return { voiceBlob, voiceVisualizer };
 };
 
 export const Voice = ({
   userImg,
   createdAt,
   url,
+  voiceVisualizerWidth,
+  setVoiceVisualizerWidth,
 }: {
   userImg: string | undefined;
   createdAt: Date;
   url: string;
+  voiceVisualizerWidth: number;
+  setVoiceVisualizerWidth: Dispatch<SetStateAction<number>>;
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number>();
@@ -154,9 +156,25 @@ export const Voice = ({
   const voiceTime = useVoiceTime(duration, currentTime, isPlaying);
 
   const { voiceBlob, voiceVisualizer } = useVoiceVisualizer(url);
+  const [voiceKey, setVoiceKey] = useState<number | null>(null);
+
+  useEffect(() => setVoiceKey(Math.random()), [voiceVisualizerWidth]);
+
+  const voiceContainer = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (voiceContainer.current === null || voiceVisualizer.current === null)
+      return;
+
+    setVoiceVisualizerWidth(
+      voiceContainer.current.offsetLeft +
+        voiceContainer.current.offsetWidth -
+        voiceVisualizer.current.offsetLeft,
+    );
+  }, [voiceBlob, voiceVisualizer, setVoiceVisualizerWidth]);
 
   return (
-    <div>
+    <div ref={voiceContainer}>
       <div className="flex gap-1.5">
         {typeof userImg !== "undefined" && (
           <Image
@@ -179,9 +197,10 @@ export const Voice = ({
         </Button>
         {voiceBlob && (
           <VoiceVisualizer
+            key={voiceKey}
             ref={voiceVisualizer}
             blob={voiceBlob}
-            width={282}
+            width={voiceVisualizerWidth}
             height={36}
             barWidth={3}
             gap={5}

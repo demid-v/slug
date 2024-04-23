@@ -33,3 +33,5 @@ export const getVoices = async () => {
 
   return [...voicesAndUserImgs];
 };
+
+export type GetVoices = Awaited<ReturnType<typeof getVoices>>;
