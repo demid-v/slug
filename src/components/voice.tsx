@@ -162,8 +162,8 @@ export const Voice = ({
             height={36}
             barWidth={3}
             gap={5}
-            barColor="#0369a1"
-            barPlayedColor="#94a3b8"
+            barColor="#0a0a0a"
+            barPlayedColor="#d4d4d4"
             currentTime={currentTime}
           />
         )}
