@@ -19,39 +19,33 @@ const useRecorder = (
   ) => Promise<ClientUploadedFileData<null>[] | undefined>,
 ) => {
   useEffect(() => {
-    const dataAvailable = (e: BlobEvent) => {
-      const file = new File([e.data], `${new Date().toISOString()}.mp3`);
-      void startUpload([file]);
-    };
+    if (!isRecording) return;
 
-    const stop = () => {
-      if (mediaRecorder === null) return;
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorder = new MediaRecorder(stream);
 
-      mediaRecorder.stream.getTracks().forEach((track) => {
-        track.stop();
+        const uploadVoice = (e: BlobEvent) => {
+          const file = new File([e.data], `${new Date().toISOString()}.mp3`);
+          void startUpload([file]);
+        };
+
+        const stopRecording = () => {
+          mediaRecorder?.stream.getTracks().forEach((track) => track.stop());
+
+          mediaRecorder?.removeEventListener("dataavailable", uploadVoice);
+          mediaRecorder?.removeEventListener("stop", stopRecording);
+        };
+
+        mediaRecorder.addEventListener("dataavailable", uploadVoice);
+        mediaRecorder.addEventListener("stop", stopRecording);
+
+        mediaRecorder.start();
+      })
+      .catch((err) => {
+        console.error(err);
       });
-
-      mediaRecorder.removeEventListener("dataavailable", dataAvailable);
-      mediaRecorder.removeEventListener("stop", stop);
-
-      mediaRecorder = null;
-    };
-
-    if (isRecording) {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          mediaRecorder = new MediaRecorder(stream);
-
-          mediaRecorder.addEventListener("dataavailable", dataAvailable);
-          mediaRecorder.addEventListener("stop", stop);
-
-          mediaRecorder.start();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
 
     return () => mediaRecorder?.stop();
   }, [isRecording, startUpload]);
