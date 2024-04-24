@@ -54,6 +54,8 @@ export const useVoice = (
       currentVoice.removeEventListener("pause", pauseListener);
       currentVoice.removeEventListener("timeupdate", timeUpdateListener);
       currentVoice.removeEventListener("ended", ended);
+
+      currentVoice.pause();
     };
   }, [duration, setIsPlaying, setDuration, setCurrentTime]);
 
