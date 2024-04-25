@@ -1,4 +1,4 @@
-/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions & import('@trivago/prettier-plugin-sort-imports').PluginConfig} */
 const config = {
   plugins: [
     "@trivago/prettier-plugin-sort-imports",
@@ -8,6 +8,7 @@ const config = {
      */
     "prettier-plugin-tailwindcss",
   ],
+  importOrder: [],
 };
 
 export default config;
