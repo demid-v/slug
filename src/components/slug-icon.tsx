@@ -3,8 +3,8 @@ export const SlugIcon = ({
   height,
   className,
 }: {
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
   className?: string;
 }) => {
   return (
@@ -13,12 +13,12 @@ export const SlugIcon = ({
       xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={height}
-      viewBox="0 0 512.000000 512.000000"
+      viewBox="0 0 512 512"
       preserveAspectRatio="xMidYMid meet"
       className={className}
     >
       <g
-        transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+        transform="translate(0,512) scale(0.1,-0.1)"
         fill="#000000"
         stroke="none"
       >

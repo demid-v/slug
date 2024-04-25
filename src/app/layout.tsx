@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
         >
           <TopNav />
-          <main className="mx-auto flex min-h-0 flex-col items-center pb-16 pt-7">
+          <main className="flex min-h-0 flex-col items-center pb-16 pt-7 container">
             {children}
           </main>
         </body>
