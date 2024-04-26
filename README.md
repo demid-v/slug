@@ -1,4 +1,12 @@
-# Slug
+<p align="center">
+	<img src="./public/icons/slug-256.png" alt="Slug logo">
+</p>
+
+<h1 align="center">
+  Slug
+</h1>
+
+Voice chat app.
 
 ## TODO
 
@@ -10,3 +18,7 @@
 - [x] Add live syncing messages with other users
 - [x] Add voice visualizer
 - [x] Add ratelimit
+- [ ] Show only the latest voices and load more on scroll
+- [ ] Add feature to create chats
+- [ ] Add feature to send text messages
+- [ ] Add feature to send images
