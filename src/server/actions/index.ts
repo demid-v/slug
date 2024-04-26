@@ -1,3 +1,5 @@
+"use server";
+
 import { clerkClient, type User } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 
