@@ -11,7 +11,7 @@ export default async function HomePage() {
       />
       <h1 className="text-center text-6xl">
         <span className="font-semibold">Welcome to </span>
-        <Link href="/chat" className="font-bold">
+        <Link href="/chats" className="font-bold">
           Slug
         </Link>
       </h1>
