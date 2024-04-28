@@ -1,4 +1,4 @@
-import { Chat } from "../_components/chat";
+import { Chat } from "~/app/_components/chat";
 import { getVoices } from "~/server/actions";
 
 export default async function ChatPage() {
