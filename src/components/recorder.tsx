@@ -2,13 +2,15 @@
 
 import { Button } from "./ui/button";
 import { Mic, Radio } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { z } from "zod";
 import { useRecorder, usePusher } from "~/hooks";
 import { useUploadThing } from "~/utils/uploadthing";
 
 export const Recorder = () => {
   const router = useRouter();
+  const { chatId } = useParams();
 
   const [isRecording, setIsRecording] = useState(false);
 
@@ -26,7 +28,8 @@ export const Recorder = () => {
     return "Start recording";
   })();
 
-  useRecorder(isRecording, startUpload);
+  const chatIdParsed = z.coerce.number().parse(chatId);
+  useRecorder(isRecording, chatIdParsed, startUpload);
 
   usePusher();
 

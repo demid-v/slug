@@ -1,5 +1,6 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
+  integer,
   pgTableCreator,
   serial,
   timestamp,
@@ -22,12 +23,26 @@ export const chats = createTable("chat", {
     .notNull(),
 });
 
+export const chatsRelations = relations(chats, ({ many }) => ({
+  voices: many(voices),
+}));
+
 export const voices = createTable("voice", {
   id: serial("id").primaryKey(),
   url: varchar("url", { length: 256 }).notNull(),
+  chatId: integer("chat_id")
+    .notNull()
+    .references(() => chats.id),
   userId: varchar("user_id", { length: 256 }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updated_at"),
 });
+
+export const voicesRelations = relations(voices, ({ one }) => ({
+  chat: one(chats, {
+    fields: [voices.chatId],
+    references: [chats.id],
+  }),
+}));

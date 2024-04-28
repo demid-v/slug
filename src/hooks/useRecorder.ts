@@ -5,9 +5,10 @@ let mediaRecorder: MediaRecorder | null = null;
 
 export const useRecorder = (
   isRecording: boolean,
+  chatId: number,
   startUpload: (
     files: File[],
-    input?: undefined,
+    input: { chatId: number },
   ) => Promise<ClientUploadedFileData<null>[] | undefined>,
 ) => {
   useEffect(() => {
@@ -20,7 +21,7 @@ export const useRecorder = (
 
         const uploadVoice = (e: BlobEvent) => {
           const file = new File([e.data], `${new Date().toISOString()}.mp3`);
-          void startUpload([file]);
+          void startUpload([file], { chatId });
         };
 
         const stopRecording = () => {
@@ -40,5 +41,5 @@ export const useRecorder = (
       });
 
     return () => mediaRecorder?.stop();
-  }, [isRecording, startUpload]);
+  }, [isRecording, chatId, startUpload]);
 };
