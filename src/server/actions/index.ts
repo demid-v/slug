@@ -37,3 +37,8 @@ export const getVoices = async () => {
 };
 
 export type GetVoices = Awaited<ReturnType<typeof getVoices>>;
+
+export const getChats = async () =>
+  await db.query.chats.findMany({
+    orderBy: (voices, { desc }) => [desc(voices.createdAt)],
+  });

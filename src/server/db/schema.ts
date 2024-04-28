@@ -14,12 +14,20 @@ import {
  */
 export const createTable = pgTableCreator((name) => `slug_${name}`);
 
-export const voices = createTable("voice", {
+export const chats = createTable("chat", {
   id: serial("id").primaryKey(),
-  url: varchar("url", { length: 256 }).notNull(),
-  userId: varchar("userId", { length: 256 }).notNull(),
+  name: varchar("name", { length: 128 }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp("updatedAt"),
+});
+
+export const voices = createTable("voice", {
+  id: serial("id").primaryKey(),
+  url: varchar("url", { length: 256 }).notNull(),
+  userId: varchar("user_id", { length: 256 }).notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at"),
 });
