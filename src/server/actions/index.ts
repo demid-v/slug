@@ -2,6 +2,7 @@
 
 import { clerkClient, type User } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
+import { chats } from "~/server/db/schema";
 
 export const getVoices = async () => {
   const voices = await db.query.voices.findMany({
@@ -42,3 +43,7 @@ export const getChats = async () =>
   await db.query.chats.findMany({
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
+
+export const createChat = async (name: string) => {
+  await db.insert(chats).values({ name });
+};

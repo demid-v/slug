@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CreateChatDialog } from "~/app/_components/create-chat-dialog";
 import { getChats } from "~/server/actions";
 
 export default async function ChatsPage() {
@@ -6,6 +7,7 @@ export default async function ChatsPage() {
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">
+      <CreateChatDialog />
       <ol className="flex flex-col gap-2">
         {chats.map((chat) => (
           <li key={chat.id}>
