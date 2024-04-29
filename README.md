@@ -19,6 +19,6 @@ Voice chat app.
 - [x] Add voice visualizer
 - [x] Add ratelimit
 - [ ] Show only the latest voices and load more on scroll
-- [ ] Add feature to create chats
+- [x] Add feature to create chats
 - [ ] Add feature to send text messages
 - [ ] Add feature to send images
