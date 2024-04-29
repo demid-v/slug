@@ -5,7 +5,6 @@ import { db } from "~/server/db";
 import { chats } from "~/server/db/schema";
 
 export const getVoices = async (chatId: number) => {
-  console.log("chatId:", chatId);
   const voices = await db.query.voices.findMany({
     where: (voices, { eq }) => eq(voices.chatId, chatId),
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],

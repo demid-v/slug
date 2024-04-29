@@ -1,45 +1,70 @@
-import { useEffect } from "react";
-import { type ClientUploadedFileData } from "uploadthing/types";
+import { useEffect, useRef, useState } from "react";
 
-let mediaRecorder: MediaRecorder | null = null;
+export const useRecorder = () => {
+  const mediaRecorder = useRef<MediaRecorder>();
+  const voiceBlob = useRef<Blob>();
 
-export const useRecorder = (
-  isRecording: boolean,
-  chatId: number,
-  startUpload: (
-    files: File[],
-    input: { chatId: number },
-  ) => Promise<ClientUploadedFileData<null>[] | undefined>,
-) => {
-  useEffect(() => {
-    if (!isRecording) return;
+  const [isRecording, setIsRecording] = useState(false);
 
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        mediaRecorder = new MediaRecorder(stream);
+  const startRecording = () => {
+    setIsRecording(true);
+  };
 
-        const uploadVoice = (e: BlobEvent) => {
-          const file = new File([e.data], `${new Date().toISOString()}.mp3`);
-          void startUpload([file], { chatId });
-        };
+  const stopRecording = () => {
+    setIsRecording(false);
+  };
 
-        const stopRecording = () => {
-          mediaRecorder?.stream.getTracks().forEach((track) => track.stop());
+  const setVoiceBlob = (event: BlobEvent) => {
+    voiceBlob.current = event.data;
+  };
 
-          mediaRecorder?.removeEventListener("dataavailable", uploadVoice);
-          mediaRecorder?.removeEventListener("stop", stopRecording);
-        };
+  const toggleRecording = async () => {
+    if (isRecording) {
+      mediaRecorder.current?.stop();
+      return;
+    }
 
-        mediaRecorder.addEventListener("dataavailable", uploadVoice);
-        mediaRecorder.addEventListener("stop", stopRecording);
-
-        mediaRecorder.start();
-      })
-      .catch((err) => {
-        console.error(err);
+    try {
+      const audioStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
       });
 
-    return () => mediaRecorder?.stop();
-  }, [isRecording, chatId, startUpload]);
+      mediaRecorder.current = new MediaRecorder(audioStream);
+
+      mediaRecorder.current.addEventListener("start", startRecording);
+      mediaRecorder.current.addEventListener("stop", stopRecording);
+      mediaRecorder.current.addEventListener("dataavailable", setVoiceBlob);
+
+      mediaRecorder.current.start();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isRecording) {
+      mediaRecorder.current?.stream
+        .getAudioTracks()
+        .forEach((track) => track.stop());
+
+      mediaRecorder.current?.removeEventListener("start", startRecording);
+      mediaRecorder.current?.removeEventListener("stop", stopRecording);
+      mediaRecorder.current?.removeEventListener("dataavailable", setVoiceBlob);
+    }
+
+    return () => {
+      if (!isRecording) return;
+
+      mediaRecorder.current?.stop();
+      mediaRecorder.current?.stream
+        .getAudioTracks()
+        .forEach((track) => track.stop());
+
+      mediaRecorder.current?.removeEventListener("start", startRecording);
+      mediaRecorder.current?.removeEventListener("stop", stopRecording);
+      mediaRecorder.current?.removeEventListener("dataavailable", setVoiceBlob);
+    };
+  }, [isRecording]);
+
+  return { toggleRecording, isRecording, voiceBlob: voiceBlob.current };
 };
