@@ -1,44 +1,61 @@
 "use server";
 
 import { clerkClient, type User } from "@clerk/nextjs/server";
+import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
-import { chats } from "~/server/db/schema";
+import { chats, type voices } from "~/server/db/schema";
 
-export const getVoices = async (chatId: number) => {
+export type Voice = InferSelectModel<typeof voices>;
+
+type VoiceAndUserImage = {
+  voice: Voice;
+  userImage: string | undefined;
+};
+
+export const getVoicesAndUserImages = async (
+  chatId: number,
+  cursor?: number,
+) => {
   const voices = await db.query.voices.findMany({
-    where: (voices, { eq }) => eq(voices.chatId, chatId),
+    where: (voices, { eq, and, lt }) =>
+      and(
+        eq(voices.chatId, chatId),
+        typeof cursor !== "undefined" ? lt(voices.id, cursor) : undefined,
+      ),
+    limit: 15,
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
 
+  return await getUserImagesForVoices(voices);
+};
+
+export const getUserImagesForVoices = async (voices: Voice[]) => {
   const users = await Promise.allSettled(
     voices.map((voice) => clerkClient.users.getUser(voice.userId)),
   );
 
-  type VoiceAndUserImg = {
-    voice: (typeof voices)[number];
-    userImg: string | undefined;
-  };
-
-  const findUserImg = (userId: string) =>
+  const findUserImage = (userId: string) =>
     (
       users.find(
         (user) => user.status === "fulfilled" && user.value.id === userId,
       ) as PromiseFulfilledResult<User> | undefined
     )?.value.imageUrl;
 
-  const voicesAndUserImgs = voices.reduce(
+  const voicesAndUserImages = voices.reduce(
     (acc, voice) =>
       acc.set(voice.id, {
         voice,
-        userImg: findUserImg(voice.userId),
+        userImage: findUserImage(voice.userId),
       }),
-    new Map<number, VoiceAndUserImg>(),
+    new Map<number, VoiceAndUserImage>(),
   );
 
-  return [...voicesAndUserImgs];
+  return [...voicesAndUserImages];
 };
 
-export type GetVoices = Awaited<ReturnType<typeof getVoices>>;
+export type VoicesAndUserImages = Awaited<
+  ReturnType<typeof getVoicesAndUserImages>
+>;
 
 export const getChats = async () =>
   await db.query.chats.findMany({

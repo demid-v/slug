@@ -1,9 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import Pusher from "pusher";
+import superjson from "superjson";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
 import { env } from "~/env";
+import { getUserImagesForVoices } from "~/server/actions";
 import { db } from "~/server/db";
 import { voices } from "~/server/db/schema";
 import { ratelimit } from "~/server/ratelimit";
@@ -31,13 +33,22 @@ export const ourFileRouter = {
       return { userId, chatId: input.chatId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      await db.insert(voices).values({
-        url: file.url,
-        chatId: metadata.chatId,
-        userId: metadata.userId,
-      });
+      const voice = await db
+        .insert(voices)
+        .values({
+          url: file.url,
+          chatId: metadata.chatId,
+          userId: metadata.userId,
+        })
+        .returning();
 
-      await pusher.trigger("chat-messages", "message", null);
+      const voiceAndUserImage = await getUserImagesForVoices(voice);
+
+      const stringifiedVoiceAndUserImage = superjson.stringify(
+        voiceAndUserImage[0],
+      );
+
+      await pusher.trigger("slug-chat", "voice", stringifiedVoiceAndUserImage);
     }),
 } satisfies FileRouter;
 

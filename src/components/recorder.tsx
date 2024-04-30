@@ -2,7 +2,7 @@
 
 import { Button } from "./ui/button";
 import { Mic, Radio } from "lucide-react";
-import { useRecorder, usePusher } from "~/hooks";
+import { useRecorder } from "~/hooks";
 import { useUploader } from "~/hooks/useUploader";
 
 export const Recorder = () => {
@@ -15,8 +15,6 @@ export const Recorder = () => {
     : isUploading
       ? "Uploading..."
       : "Start recording";
-
-  usePusher();
 
   return (
     <div className="flex items-center justify-start gap-5 px-2">

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Chat } from "~/app/_components/chat";
-import { getVoices } from "~/server/actions";
+import { getVoicesAndUserImages } from "~/server/actions";
 
 export default async function ChatPage({
   params,
@@ -8,11 +8,7 @@ export default async function ChatPage({
   params: { chatId: string };
 }) {
   const chatIdParsed = z.coerce.number().parse(params.chatId);
-  const voices = await getVoices(chatIdParsed);
+  const voices = await getVoicesAndUserImages(chatIdParsed);
 
-  return (
-    <div className="flex h-full w-96 flex-col gap-8">
-      <Chat voices={voices} />
-    </div>
-  );
+  return <Chat initialVoices={voices} cursor={voices.at(-1)?.[0]} />;
 }

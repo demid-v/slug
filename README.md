@@ -18,7 +18,7 @@ Voice chat app.
 - [x] Add live syncing messages with other users
 - [x] Add voice visualizer
 - [x] Add ratelimit
-- [ ] Show only the latest voices and load more on scroll
+- [x] Show only the latest voices and load more on scroll
 - [x] Add feature to create chats
 - [ ] Add feature to send text messages
 - [ ] Add feature to send images
