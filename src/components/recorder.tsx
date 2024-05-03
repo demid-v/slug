@@ -2,8 +2,7 @@
 
 import { Button } from "./ui/button";
 import { Mic, Radio } from "lucide-react";
-import { useRecorder } from "~/hooks";
-import { useUploader } from "~/hooks/useUploader";
+import { useRecorder, useUploader } from "~/hooks";
 
 export const Recorder = () => {
   const { toggleRecording, isRecording, voiceBlob } = useRecorder();
