@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 import superjson from "superjson";
@@ -10,13 +9,14 @@ const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
 });
 
 export const usePusher = (chatId: number) => {
-  const router = useRouter();
-
   const [pushedVoice, setPushedVoice] = useState<VoicesAndUserImages[number]>();
 
+  const channelName = `slug-chat-${chatId}`;
+
   useEffect(() => {
-    const channel = pusher.subscribe(`slug-chat-${chatId}`);
-    channel.bind("voice", (voice: string) => {
+    const channel = pusher.subscribe(channelName);
+
+    channel.bind("voice", (voice: object) => {
       const parsedVoice = superjson.parse<VoicesAndUserImages[number]>(
         JSON.stringify(voice),
       );
@@ -25,10 +25,10 @@ export const usePusher = (chatId: number) => {
     });
 
     return () => {
-      pusher.unsubscribe(`slug-chat-${chatId}`);
-      channel.unbind_all();
+      pusher.unsubscribe(channelName);
+      channel.unbind("voice");
     };
-  }, [router, chatId]);
+  }, [channelName]);
 
   return pushedVoice;
 };
