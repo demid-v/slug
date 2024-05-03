@@ -5,9 +5,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
 import { env } from "~/env";
-import { getUserImagesForVoices } from "~/server/actions";
-import { db } from "~/server/db";
-import { voices } from "~/server/db/schema";
+import { createVoice, getUserImagesForVoices } from "~/server/actions";
 import { ratelimit } from "~/server/ratelimit";
 
 const f = createUploadthing();
@@ -33,14 +31,11 @@ export const ourFileRouter = {
       return { userId, chatId: input.chatId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      const voice = await db
-        .insert(voices)
-        .values({
-          url: file.url,
-          chatId: metadata.chatId,
-          userId: metadata.userId,
-        })
-        .returning();
+      const voice = await createVoice(
+        file.url,
+        metadata.chatId,
+        metadata.userId,
+      );
 
       const voiceAndUserImage = await getUserImagesForVoices(voice);
 

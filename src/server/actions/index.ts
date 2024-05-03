@@ -3,7 +3,7 @@
 import { clerkClient, type User } from "@clerk/nextjs/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
-import { chats, type voices } from "~/server/db/schema";
+import { chats, voices } from "~/server/db/schema";
 
 export type Voice = InferSelectModel<typeof voices>;
 
@@ -65,3 +65,17 @@ export const getChats = async () =>
 export const createChat = async (name: string) => {
   await db.insert(chats).values({ name });
 };
+
+export const createVoice = async (
+  url: string,
+  chatId: number,
+  userId: string,
+) =>
+  await db
+    .insert(voices)
+    .values({
+      url,
+      chatId,
+      userId,
+    })
+    .returning();
