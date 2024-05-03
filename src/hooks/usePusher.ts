@@ -5,17 +5,17 @@ import superjson from "superjson";
 import { env } from "~/env";
 import { type VoicesAndUserImages } from "~/server/actions";
 
-export const usePusher = () => {
+const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
+  cluster: "eu",
+});
+
+export const usePusher = (chatId: number) => {
   const router = useRouter();
 
   const [pushedVoice, setPushedVoice] = useState<VoicesAndUserImages[number]>();
 
   useEffect(() => {
-    const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: "eu",
-    });
-
-    const channel = pusher.subscribe("slug-chat");
+    const channel = pusher.subscribe(`slug-chat-${chatId}`);
     channel.bind("voice", (voice: string) => {
       const parsedVoice = superjson.parse<VoicesAndUserImages[number]>(
         JSON.stringify(voice),
@@ -25,10 +25,10 @@ export const usePusher = () => {
     });
 
     return () => {
-      pusher.unsubscribe("slug-chat");
+      pusher.unsubscribe(`slug-chat-${chatId}`);
       channel.unbind_all();
     };
-  }, [router]);
+  }, [router, chatId]);
 
   return pushedVoice;
 };

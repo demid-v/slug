@@ -48,7 +48,11 @@ export const ourFileRouter = {
         voiceAndUserImage[0],
       );
 
-      await pusher.trigger("slug-chat", "voice", stringifiedVoiceAndUserImage);
+      await pusher.trigger(
+        `slug-chat-${metadata.chatId}`,
+        "voice",
+        stringifiedVoiceAndUserImage,
+      );
     }),
 } satisfies FileRouter;
 

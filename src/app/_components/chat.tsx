@@ -50,7 +50,7 @@ export const Chat = ({
       .finally(() => (isFetchingVoices.current = false));
   }, [inView, chatIdParsed]);
 
-  const pushedVoice = usePusher();
+  const pushedVoice = usePusher(chatIdParsed);
 
   useEffect(() => {
     if (typeof pushedVoice === "undefined") return;
