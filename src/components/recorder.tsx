@@ -1,19 +1,26 @@
-"use client";
-
 import { Button } from "./ui/button";
-import { Mic, Radio } from "lucide-react";
-import { useRecorder, useUploader } from "~/hooks";
+import { Radio, Mic } from "lucide-react";
+import { useAudioRecorder } from "react-audio-voice-recorder";
+import { useUploader } from "~/hooks";
 
 export const Recorder = () => {
-  const { toggleRecording, isRecording, voiceBlob } = useRecorder();
+  const {
+    isRecording,
+    startRecording,
+    stopRecording,
+    recordingBlob: voiceBlob,
+  } = useAudioRecorder();
 
-  const isUploading = useUploader(isRecording, voiceBlob);
+  const toggleRecording = () => {
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
 
-  const recorderText = isRecording
-    ? "Stop recording"
-    : isUploading
-      ? "Uploading..."
-      : "Start recording";
+    startRecording();
+  };
+
+  const isUploading = useUploader(voiceBlob);
 
   return (
     <div className="flex items-center justify-start gap-5 px-2">
@@ -24,7 +31,7 @@ export const Recorder = () => {
       >
         {isRecording ? <Radio /> : <Mic />}
       </Button>
-      <span className="text-lg font-medium">{recorderText}</span>
+      {isUploading && <span className="text-lg font-medium">Uploading...</span>}
     </div>
   );
 };

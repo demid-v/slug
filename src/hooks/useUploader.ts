@@ -1,30 +1,24 @@
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { z } from "zod";
 import { useUploadThing } from "~/utils/uploadthing";
 
-export const useUploader = (
-  isRecording: boolean,
-  voiceBlob: Blob | undefined,
-) => {
-  const router = useRouter();
+export const useUploader = (voiceBlob: Blob | undefined) => {
   const { chatId } = useParams();
+  const chatIdParsed = z.coerce.number().parse(chatId);
 
   const { startUpload, isUploading } = useUploadThing("voiceUploader", {
     onClientUploadComplete: (res) => {
       console.log("Upload Completed.", res);
-      router.refresh();
     },
   });
 
-  const chatIdParsed = z.coerce.number().parse(chatId);
-
   useEffect(() => {
-    if (isRecording || typeof voiceBlob === "undefined") return;
+    if (typeof voiceBlob === "undefined") return;
 
     const file = new File([voiceBlob], `${new Date().toISOString()}.mp3`);
     void startUpload([file], { chatId: chatIdParsed });
-  }, [isRecording, voiceBlob, startUpload, chatIdParsed]);
+  }, [voiceBlob, chatIdParsed, startUpload]);
 
   return isUploading;
 };
