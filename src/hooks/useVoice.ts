@@ -1,68 +1,61 @@
 import { type Dispatch, type SetStateAction, useRef, useEffect } from "react";
+import { useAudioPlayer } from "react-use-audio-player";
+import { getVoiceTime } from "~/utils/getVoiceTime";
 
 export const useVoice = (
   url: string,
   duration: number | undefined,
-  setIsPlaying: Dispatch<SetStateAction<boolean>>,
-  setDuration: Dispatch<SetStateAction<number | undefined>>,
+  currentTime: number,
   setCurrentTime: Dispatch<SetStateAction<number>>,
   setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
   createdAt: Date,
 ) => {
-  const voice = useRef<HTMLAudioElement | null>(null);
+  const requestCurrentTime = useRef<number>();
 
-  const toggleVoiceState = () => {
-    if (voice.current === null) return;
-
-    if (voice.current.paused) void voice.current.play();
-    else voice.current.pause();
-  };
-
-  useEffect(() => {
-    if (voice.current !== null) return;
-
-    voice.current = new Audio(url);
-    voice.current.currentTime = 1e101;
-  }, [url]);
+  const {
+    playing: isPlaying,
+    stopped: isStopped,
+    paused: isPaused,
+    load,
+    togglePlayPause,
+    stop,
+    getPosition: getCurrentTime,
+  } = useAudioPlayer();
 
   useEffect(() => {
-    const currentVoice = voice.current;
+    load(url, {
+      onplay() {
+        const setVoiceTimeout = () => {
+          requestCurrentTime.current = requestAnimationFrame(() => {
+            setCurrentTime(getCurrentTime());
+            setVoiceTimeout();
+          });
+        };
 
-    if (currentVoice === null) return;
+        setVoiceTimeout();
+      },
+      onend() {
+        if (typeof requestCurrentTime.current !== "undefined")
+          cancelAnimationFrame(requestCurrentTime.current);
 
-    const playListener = () => setIsPlaying(true);
-    const pauseListener = () => setIsPlaying(false);
-    const timeUpdateListener = () => {
-      if (voice.current === null) return;
+        setCurrentTime(0);
+      },
+    });
+  }, [url, load, setCurrentTime, getCurrentTime]);
 
-      if (typeof duration === "undefined") {
-        setDuration(Math.round(voice.current.duration));
-        voice.current.currentTime = 0;
-      }
+  useEffect(() => () => stop(), [stop]);
 
-      setCurrentTime(voice.current.currentTime);
-    };
-    const ended = () => setCurrentTime(0);
-
-    currentVoice.addEventListener("play", playListener);
-    currentVoice.addEventListener("pause", pauseListener);
-    currentVoice.addEventListener("timeupdate", timeUpdateListener);
-    currentVoice.addEventListener("ended", ended);
-
-    return () => {
-      currentVoice.removeEventListener("play", playListener);
-      currentVoice.removeEventListener("pause", pauseListener);
-      currentVoice.removeEventListener("timeupdate", timeUpdateListener);
-      currentVoice.removeEventListener("ended", ended);
-
-      currentVoice.pause();
-    };
-  }, [duration, setIsPlaying, setDuration, setCurrentTime]);
-
-  useEffect(
-    () => setLocaleCreatedAt(createdAt.toLocaleTimeString()),
-    [setLocaleCreatedAt, createdAt],
+  const voiceTime = getVoiceTime(
+    duration,
+    currentTime,
+    isPlaying,
+    isPaused,
+    isStopped,
   );
 
-  return toggleVoiceState;
+  useEffect(() => {
+    setLocaleCreatedAt(createdAt.toLocaleTimeString());
+  }, [setLocaleCreatedAt, createdAt]);
+
+  return { togglePlayPause, isPlaying, voiceTime };
 };

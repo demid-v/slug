@@ -15,6 +15,10 @@ export const getVoiceTime = (
   duration: number | undefined,
   currentTime: number,
   isPlaying: boolean,
+  isPaused: boolean,
+  isStopped: boolean,
 ) => {
-  return isPlaying ? formatTime(currentTime) : formatTime(duration);
+  return isPlaying || (isPaused && !isStopped)
+    ? formatTime(currentTime)
+    : formatTime(duration);
 };

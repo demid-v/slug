@@ -13,20 +13,21 @@ import {
 } from "react";
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
-import { getVoiceTime } from "~/utils/getVoiceTime";
 
 export const Voice = forwardRef(
   (
     {
       userImg,
-      createdAt,
       url,
+      duration,
+      createdAt,
       voiceVisualizerWidth,
       setVoiceVisualizerWidth,
     }: {
       userImg: string | undefined;
-      createdAt: Date;
       url: string;
+      duration: number;
+      createdAt: Date;
       voiceVisualizerWidth: number;
       setVoiceVisualizerWidth: Dispatch<SetStateAction<number>>;
     },
@@ -34,24 +35,19 @@ export const Voice = forwardRef(
   ) => {
     const voiceContainer = useRef<HTMLDivElement>(null);
 
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [duration, setDuration] = useState<number>();
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
 
     useImperativeHandle(ref, () => voiceContainer.current as HTMLInputElement);
 
-    const toggleVoiceState = useVoice(
+    const { togglePlayPause, isPlaying, voiceTime } = useVoice(
       url,
       duration,
-      setIsPlaying,
-      setDuration,
+      currentTime,
       setCurrentTime,
       setLocaleCreatedAt,
       createdAt,
     );
-
-    const voiceTime = getVoiceTime(duration, currentTime, isPlaying);
 
     const { voiceBlob, voiceVisualizer } = useVoiceVisualizer(url);
     const [voiceKey, setVoiceKey] = useState<number | null>(null);
@@ -83,7 +79,7 @@ export const Voice = forwardRef(
           )}
           <Button
             className="h-auto w-auto rounded-full p-2.5"
-            onClick={toggleVoiceState}
+            onClick={togglePlayPause}
           >
             {isPlaying ? (
               <Pause width={16} height={16} />

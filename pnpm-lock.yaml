@@ -77,6 +77,9 @@ importers:
       react-intersection-observer:
         specifier: ^9.10.1
         version: 9.10.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-use-audio-player:
+        specifier: ^2.2.0
+        version: 2.2.0(react@18.3.1)
       superjson:
         specifier: ^2.2.1
         version: 2.2.1
@@ -1933,6 +1936,9 @@ packages:
     resolution: {integrity: sha512-rf9142VLQNMVBj+BjVLISgDWDxnJGUIuX39dvqcdySwr2gTsPfsqW1twWDUjfwQNWm9hEn40MpDu9RFGUN+e8A==}
     engines: {node: '>=16.0.0'}
 
+  howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
+
   ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
@@ -2648,6 +2654,11 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-use-audio-player@2.2.0:
+    resolution: {integrity: sha512-IMM+WiZAq1KUvTwq0sAdRdjEzyG4jzz1tK/JtC/+LLt3z/uJk3AFRLL3pgbOgS/2SnfVzFKCxR7pnBsu6nUFvg==}
+    peerDependencies:
+      react: '>=16.8'
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -5057,6 +5068,8 @@ snapshots:
 
   hono@4.3.0: {}
 
+  howler@2.2.4: {}
+
   ignore@5.3.1: {}
 
   import-fresh@3.3.0:
@@ -5683,6 +5696,11 @@ snapshots:
       tslib: 2.6.2
     optionalDependencies:
       '@types/react': 18.3.1
+
+  react-use-audio-player@2.2.0(react@18.3.1):
+    dependencies:
+      howler: 2.2.4
+      react: 18.3.1
 
   react@18.3.1:
     dependencies:

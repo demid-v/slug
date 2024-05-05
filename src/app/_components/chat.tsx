@@ -64,17 +64,29 @@ export const Chat = ({
         ref={chat}
         className="flex h-full flex-col-reverse gap-3 overflow-y-auto border p-4"
       >
-        {voices.map(([voiceId, { voice, userImage: userImg }], index) => (
-          <Voice
-            key={voiceId}
-            ref={index === voices.length - 1 ? voiceRef : null}
-            userImg={userImg}
-            createdAt={voice.createdAt}
-            url={voice.url}
-            voiceVisualizerWidth={voiceVisualizerWidth}
-            setVoiceVisualizerWidth={setVoiceVisualizerWidth}
-          />
-        ))}
+        {voices.map(
+          (
+            [
+              voiceId,
+              {
+                voice: { url, duration, createdAt },
+                userImage: userImg,
+              },
+            ],
+            index,
+          ) => (
+            <Voice
+              key={voiceId}
+              ref={index === voices.length - 1 ? voiceRef : null}
+              userImg={userImg}
+              url={url}
+              duration={duration}
+              createdAt={createdAt}
+              voiceVisualizerWidth={voiceVisualizerWidth}
+              setVoiceVisualizerWidth={setVoiceVisualizerWidth}
+            />
+          ),
+        )}
       </div>
       <Recorder />
     </div>
