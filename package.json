@@ -9,7 +9,8 @@
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
-    "fixAll": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
+    "formatAll": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
+    "fixAll": "pnpm formatAll && pnpm lint",
     "start": "next start"
   },
   "dependencies": {
