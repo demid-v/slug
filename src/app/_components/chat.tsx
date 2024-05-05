@@ -2,15 +2,12 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import { z } from "zod";
 import { Recorder } from "~/components/recorder";
 import { Voice } from "~/components/voice";
 import { usePusher } from "~/hooks";
-import {
-  getVoicesAndUserImages,
-  type VoicesAndUserImages,
-} from "~/server/actions";
+import { useMoreVoices } from "~/hooks";
+import { type VoicesAndUserImages } from "~/server/actions";
 
 export const Chat = ({
   initialVoices,
@@ -19,36 +16,28 @@ export const Chat = ({
   initialVoices: VoicesAndUserImages;
   cursor: number | undefined;
 }) => {
+  const router = useRouter();
   const { chatId } = useParams();
+
   const chatIdParsed = z.coerce.number().parse(chatId);
 
   const chat = useRef<HTMLDivElement | null>(null);
 
   const [voices, setVoices] = useState(initialVoices);
-  const voicesCursor = useRef(cursor);
-  const isFetchingVoices = useRef(false);
-  const isAllFetched = useRef(false);
-
   const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
 
-  const { ref: voiceRef, inView } = useInView();
+  useEffect(() => () => router.refresh(), [router]);
 
-  useEffect(() => {
-    if (!inView || isFetchingVoices.current || isAllFetched.current) return;
+  const { moreVoices, voiceRef } = useMoreVoices(
+    initialVoices.length,
+    cursor,
+    chatIdParsed,
+  );
 
-    isFetchingVoices.current = true;
-    getVoicesAndUserImages(chatIdParsed, voicesCursor.current)
-      .then((voices) => {
-        if (voices.length < 15) isAllFetched.current = true;
-
-        setVoices((currentVoices) => {
-          voicesCursor.current = voices.at(-1)?.[0];
-          return [...currentVoices, ...voices];
-        });
-      })
-      .catch(console.error)
-      .finally(() => (isFetchingVoices.current = false));
-  }, [inView, chatIdParsed]);
+  useEffect(
+    () => setVoices((voices) => [...voices, ...moreVoices]),
+    [moreVoices],
+  );
 
   const pushedVoice = usePusher(chatIdParsed);
 
@@ -57,10 +46,6 @@ export const Chat = ({
 
     setVoices((currentVoices) => [pushedVoice, ...currentVoices]);
   }, [pushedVoice]);
-
-  const router = useRouter();
-
-  useEffect(() => () => router.refresh(), [router]);
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">
