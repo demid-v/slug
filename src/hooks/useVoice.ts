@@ -10,7 +10,7 @@ export const useVoice = (
   setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
   createdAt: Date,
 ) => {
-  const requestCurrentTime = useRef<number>();
+  const currentTimeRequest = useRef<number>();
 
   const {
     playing: isPlaying,
@@ -25,18 +25,18 @@ export const useVoice = (
   useEffect(() => {
     load(url, {
       onplay() {
-        const setVoiceTimeout = () => {
-          requestCurrentTime.current = requestAnimationFrame(() => {
+        const requestCurrentTime = () => {
+          currentTimeRequest.current = requestAnimationFrame(() => {
             setCurrentTime(getCurrentTime());
-            setVoiceTimeout();
+            requestCurrentTime();
           });
         };
 
-        setVoiceTimeout();
+        requestCurrentTime();
       },
       onend() {
-        if (typeof requestCurrentTime.current !== "undefined")
-          cancelAnimationFrame(requestCurrentTime.current);
+        if (typeof currentTimeRequest.current !== "undefined")
+          cancelAnimationFrame(currentTimeRequest.current);
 
         setCurrentTime(0);
       },
