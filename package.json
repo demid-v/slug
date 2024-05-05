@@ -8,9 +8,10 @@
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
+    "format-all": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
+    "tsc-check": "tsc --noEmit",
     "lint": "next lint",
-    "formatAll": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
-    "fixAll": "pnpm formatAll && pnpm lint",
+    "fix-all": "pnpm format-all && pnpm tsc-check && pnpm lint",
     "start": "next start"
   },
   "dependencies": {
