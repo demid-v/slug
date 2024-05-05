@@ -30,7 +30,7 @@ export const useMoreVoices = (
         if (voices.length < 15) isAllFetched.current = true;
 
         setMoreVoices(voices);
-        voicesCursor.current = voices.at(-1)?.[0];
+        voicesCursor.current = voices.at(-1)?.id;
       } catch (error) {
         console.error(error);
       }

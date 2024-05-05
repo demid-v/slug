@@ -17,14 +17,14 @@ import { useVoice, useVoiceVisualizer } from "~/hooks";
 export const Voice = forwardRef(
   (
     {
-      userImg,
+      imageUrl,
       url,
       duration,
       createdAt,
       voiceVisualizerWidth,
       setVoiceVisualizerWidth,
     }: {
-      userImg: string | undefined;
+      imageUrl: string | undefined;
       url: string;
       duration: number;
       createdAt: Date;
@@ -68,9 +68,9 @@ export const Voice = forwardRef(
     return (
       <div ref={voiceContainer}>
         <div className="flex gap-1.5">
-          {typeof userImg !== "undefined" && (
+          {typeof imageUrl !== "undefined" && (
             <Image
-              src={userImg}
+              src={imageUrl}
               alt="Profile pic"
               width={20}
               height={20}

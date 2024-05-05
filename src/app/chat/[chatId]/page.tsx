@@ -9,7 +9,7 @@ export default async function ChatPage({
 }) {
   const chatIdParsed = z.coerce.number().parse(params.chatId);
   const voices = await getVoicesAndUserImages(chatIdParsed);
-  const cursor = voices.at(-1)?.[0];
+  const cursor = voices.at(-1)?.id;
 
   return <Chat initialVoices={voices} cursor={cursor} />;
 }

@@ -1,16 +1,11 @@
 "use server";
 
-import { clerkClient, type User } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, voices } from "~/server/db/schema";
 
 export type Voice = InferSelectModel<typeof voices>;
-
-type VoiceAndUserImage = {
-  voice: Voice;
-  userImage: string | undefined;
-};
 
 export const getVoicesAndUserImages = async (
   chatId: number,
@@ -29,29 +24,27 @@ export const getVoicesAndUserImages = async (
   return await getUserImagesForVoices(voices);
 };
 
-export const getUserImagesForVoices = async (voices: Voice[]) => {
-  const users = await Promise.allSettled(
-    voices.map((voice) => clerkClient.users.getUser(voice.userId)),
-  );
+export const getUserImagesForVoices = async (voices: Voice[]) =>
+  (
+    await Promise.allSettled(
+      voices.map(async (voice) => {
+        try {
+          const imageUrl = (await clerkClient.users.getUser(voice.userId))
+            .imageUrl;
+          return { ...voice, imageUrl };
+        } catch (error) {
+          console.log(error);
+        }
 
-  const findUserImage = (userId: string) =>
-    (
-      users.find(
-        (user) => user.status === "fulfilled" && user.value.id === userId,
-      ) as PromiseFulfilledResult<User> | undefined
-    )?.value.imageUrl;
-
-  const voicesAndUserImages = voices.reduce(
-    (acc, voice) =>
-      acc.set(voice.id, {
-        voice,
-        userImage: findUserImage(voice.userId),
+        return voice;
       }),
-    new Map<number, VoiceAndUserImage>(),
-  );
-
-  return [...voicesAndUserImages];
-};
+    )
+  )
+    .filter((result) => result.status === "fulfilled")
+    .map(
+      (result) =>
+        (result as PromiseFulfilledResult<Voice & { imageUrl?: string }>).value,
+    );
 
 export type VoicesAndUserImages = Awaited<
   ReturnType<typeof getVoicesAndUserImages>
