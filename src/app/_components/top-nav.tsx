@@ -4,13 +4,15 @@ import { SlugIcon } from "~/components/slug-icon";
 
 export const TopNav = () => {
   return (
-    <nav className="flex h-14 items-center justify-between px-4">
+    <nav className="flex items-center justify-between px-5 py-3">
       <Link href="/" className="flex items-center gap-3 font-bold">
         <SlugIcon width={32} height={32} />
         <span>Slug</span>
       </Link>
       <SignedOut>
-        <SignInButton />
+        <SignInButton>
+          <button className="font-medium">Sign in</button>
+        </SignInButton>
       </SignedOut>
       <SignedIn>
         <UserButton />
