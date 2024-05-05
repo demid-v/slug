@@ -2,8 +2,6 @@ import { Button } from "./ui/button";
 import { Pause, Play, User2 } from "lucide-react";
 import Image from "next/image";
 import {
-  type Dispatch,
-  type SetStateAction,
   useEffect,
   useRef,
   useState,
@@ -14,6 +12,7 @@ import {
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
 import { cn } from "~/utils/classes";
+import { type SetState } from "~/utils/setStateType";
 
 export const Voice = forwardRef(
   (
@@ -32,7 +31,7 @@ export const Voice = forwardRef(
       duration: number;
       createdAt: Date;
       voiceVisualizerWidth: number;
-      setVoiceVisualizerWidth: Dispatch<SetStateAction<number>>;
+      setVoiceVisualizerWidth: SetState<number>;
       userId: string;
       currentUserId: string | null;
     },

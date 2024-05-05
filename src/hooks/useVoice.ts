@@ -1,13 +1,14 @@
-import { type Dispatch, type SetStateAction, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
 import { getVoiceTime } from "~/utils/getVoiceTime";
+import { type SetState } from "~/utils/setStateType";
 
 export const useVoice = (
   url: string,
   duration: number | undefined,
   currentTime: number,
-  setCurrentTime: Dispatch<SetStateAction<number>>,
-  setLocaleCreatedAt: Dispatch<SetStateAction<string>>,
+  setCurrentTime: SetState<number>,
+  setLocaleCreatedAt: SetState<string>,
   createdAt: Date,
 ) => {
   const currentTimeRequest = useRef<number>();
