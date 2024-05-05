@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { z } from "zod";
@@ -57,6 +57,10 @@ export const Chat = ({
 
     setVoices((currentVoices) => [pushedVoice, ...currentVoices]);
   }, [pushedVoice]);
+
+  const router = useRouter();
+
+  useEffect(() => () => router.refresh(), [router]);
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">
