@@ -12,9 +12,11 @@ import { type VoicesAndUserImages } from "~/server/actions";
 export const Chat = ({
   initialVoices,
   cursor,
+  currentUserId,
 }: {
   initialVoices: VoicesAndUserImages;
   cursor: number | undefined;
+  currentUserId: string | null;
 }) => {
   const router = useRouter();
   const { chatId } = useParams();
@@ -52,19 +54,24 @@ export const Chat = ({
       <div
         ref={chat}
         className="flex h-full flex-col-reverse gap-3 overflow-y-auto border p-4"
+        style={{ scrollbarWidth: "thin" }}
       >
-        {voices.map(({ id, url, duration, createdAt, imageUrl }, index) => (
-          <Voice
-            key={id}
-            ref={index === voices.length - 1 ? voiceRef : null}
-            imageUrl={imageUrl}
-            url={url}
-            duration={duration}
-            createdAt={createdAt}
-            voiceVisualizerWidth={voiceVisualizerWidth}
-            setVoiceVisualizerWidth={setVoiceVisualizerWidth}
-          />
-        ))}
+        {voices.map(
+          ({ id, url, duration, createdAt, userId, imageUrl }, index) => (
+            <Voice
+              key={id}
+              ref={index === voices.length - 1 ? voiceRef : null}
+              imageUrl={imageUrl}
+              url={url}
+              duration={duration}
+              createdAt={createdAt}
+              voiceVisualizerWidth={voiceVisualizerWidth}
+              setVoiceVisualizerWidth={setVoiceVisualizerWidth}
+              userId={userId}
+              currentUserId={currentUserId}
+            />
+          ),
+        )}
       </div>
       <Recorder />
     </div>

@@ -13,6 +13,7 @@ import {
 } from "react";
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
+import { cn } from "~/utils/classes";
 
 export const Voice = forwardRef(
   (
@@ -23,6 +24,8 @@ export const Voice = forwardRef(
       createdAt,
       voiceVisualizerWidth,
       setVoiceVisualizerWidth,
+      userId,
+      currentUserId,
     }: {
       imageUrl: string | undefined;
       url: string;
@@ -30,6 +33,8 @@ export const Voice = forwardRef(
       createdAt: Date;
       voiceVisualizerWidth: number;
       setVoiceVisualizerWidth: Dispatch<SetStateAction<number>>;
+      userId: string;
+      currentUserId: string | null;
     },
     ref: ForwardedRef<HTMLDivElement>,
   ) => {
@@ -68,17 +73,24 @@ export const Voice = forwardRef(
     return (
       <div ref={voiceContainer}>
         <div className="flex gap-1.5">
-          {typeof imageUrl !== "undefined" ? (
-            <Image
-              src={imageUrl}
-              alt="Profile pic"
-              width={20}
-              height={20}
-              className="self-center rounded-full"
-            />
-          ) : (
-            <User2 width={20} height={20} className="self-center" />
-          )}
+          <div
+            className={cn(
+              "self-center rounded-full",
+              userId === currentUserId && "outline outline-2 outline-black",
+            )}
+          >
+            {typeof imageUrl !== "undefined" ? (
+              <Image
+                src={imageUrl}
+                alt="Profile pic"
+                width={20}
+                height={20}
+                className="rounded-full"
+              />
+            ) : (
+              <User2 width={20} height={20} className="rounded-full" />
+            )}
+          </div>
           <Button
             className="h-auto w-auto rounded-full p-2.5"
             onClick={togglePlayPause}
