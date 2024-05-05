@@ -68,6 +68,7 @@ export const createChat = async (name: string) => {
 
 export const createVoice = async (
   url: string,
+  duration: number,
   chatId: number,
   userId: string,
 ) =>
@@ -75,6 +76,7 @@ export const createVoice = async (
     .insert(voices)
     .values({
       url,
+      duration,
       chatId,
       userId,
     })

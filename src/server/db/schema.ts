@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   integer,
   pgTableCreator,
+  real,
   serial,
   timestamp,
   varchar,
@@ -30,6 +31,7 @@ export const chatsRelations = relations(chats, ({ many }) => ({
 export const voices = createTable("voice", {
   id: serial("id").primaryKey(),
   url: varchar("url", { length: 256 }).notNull(),
+  duration: real("duration").notNull(),
   chatId: integer("chat_id")
     .notNull()
     .references(() => chats.id),

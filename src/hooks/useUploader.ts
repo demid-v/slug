@@ -17,7 +17,20 @@ export const useUploader = (voiceBlob: Blob | undefined) => {
     if (typeof voiceBlob === "undefined") return;
 
     const file = new File([voiceBlob], `${new Date().toISOString()}.mp3`);
-    void startUpload([file], { chatId: chatIdParsed });
+    const audio = new Audio(URL.createObjectURL(voiceBlob));
+
+    audio.addEventListener("loadedmetadata", () => {
+      audio.currentTime = 1e101;
+
+      audio.addEventListener("loadeddata", () => {
+        void startUpload([file], {
+          duration: audio.duration,
+          chatId: chatIdParsed,
+        });
+      });
+
+      URL.revokeObjectURL(audio.src);
+    });
   }, [voiceBlob, chatIdParsed, startUpload]);
 
   return isUploading;

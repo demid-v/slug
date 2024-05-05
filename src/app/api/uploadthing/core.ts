@@ -20,35 +20,33 @@ const pusher = new Pusher({
 
 export const ourFileRouter = {
   voiceUploader: f({ audio: { maxFileSize: "4MB" } })
-    .input(z.object({ chatId: z.number() }))
-    .middleware(async ({ input }) => {
+    .input(z.object({ duration: z.number(), chatId: z.number() }))
+    .middleware(async ({ input: { duration, chatId } }) => {
       const { userId } = auth();
       if (!userId) throw new UploadThingError("Unauthorized");
 
       const { success } = await ratelimit.limit(userId);
       if (!success) throw new UploadThingError("Too many requests");
 
-      return { userId, chatId: input.chatId };
+      return { duration, chatId, userId };
     })
-    .onUploadComplete(async ({ metadata, file }) => {
-      const voice = await createVoice(
-        file.url,
-        metadata.chatId,
-        metadata.userId,
-      );
+    .onUploadComplete(
+      async ({ metadata: { chatId, userId, duration }, file }) => {
+        const voice = await createVoice(file.url, duration, chatId, userId);
 
-      const voiceAndUserImage = await getUserImagesForVoices(voice);
+        const voiceAndUserImage = await getUserImagesForVoices(voice);
 
-      const stringifiedVoiceAndUserImage = superjson.stringify(
-        voiceAndUserImage[0],
-      );
+        const stringifiedVoiceAndUserImage = superjson.stringify(
+          voiceAndUserImage[0],
+        );
 
-      await pusher.trigger(
-        `slug-chat-${metadata.chatId}`,
-        "voice",
-        stringifiedVoiceAndUserImage,
-      );
-    }),
+        await pusher.trigger(
+          `slug-chat-${chatId}`,
+          "voice",
+          stringifiedVoiceAndUserImage,
+        );
+      },
+    ),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
