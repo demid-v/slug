@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, User2 } from "lucide-react";
 import Image from "next/image";
 import {
   type Dispatch,
@@ -68,7 +68,7 @@ export const Voice = forwardRef(
     return (
       <div ref={voiceContainer}>
         <div className="flex gap-1.5">
-          {typeof imageUrl !== "undefined" && (
+          {typeof imageUrl !== "undefined" ? (
             <Image
               src={imageUrl}
               alt="Profile pic"
@@ -76,6 +76,8 @@ export const Voice = forwardRef(
               height={20}
               className="self-center rounded-full"
             />
+          ) : (
+            <User2 width={20} height={20} className="self-center" />
           )}
           <Button
             className="h-auto w-auto rounded-full p-2.5"
