@@ -28,26 +28,16 @@ export const Chat = ({
   const [voices, setVoices] = useState(initialVoices);
   const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
 
-  useEffect(() => () => router.refresh(), [router]);
+  usePusher(chatIdParsed, setVoices);
 
-  const { moreVoices, voiceRef } = useMoreVoices(
+  const { voiceRef } = useMoreVoices(
     initialVoices.length,
     cursor,
     chatIdParsed,
+    setVoices,
   );
 
-  useEffect(
-    () => setVoices((voices) => [...voices, ...moreVoices]),
-    [moreVoices],
-  );
-
-  const pushedVoice = usePusher(chatIdParsed);
-
-  useEffect(() => {
-    if (typeof pushedVoice === "undefined") return;
-
-    setVoices((currentVoices) => [pushedVoice, ...currentVoices]);
-  }, [pushedVoice]);
+  useEffect(() => () => router.refresh(), [router]);
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">

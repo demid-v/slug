@@ -1,20 +1,20 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   getVoicesAndUserImages,
   type VoicesAndUserImages,
 } from "~/server/actions";
+import { type SetState } from "~/utils/setStateType";
 
 export const useMoreVoices = (
   numberOfVoices: number,
   cursor: number | undefined,
   chatId: number,
+  setVoices: SetState<VoicesAndUserImages>,
 ) => {
   const voicesCursor = useRef(cursor);
   const isFetchingVoices = useRef(false);
   const isAllFetched = useRef(numberOfVoices < 15);
-
-  const [moreVoices, setMoreVoices] = useState<VoicesAndUserImages>([]);
 
   const { ref: voiceRef, inView } = useInView();
 
@@ -29,7 +29,7 @@ export const useMoreVoices = (
         );
         if (voices.length < 15) isAllFetched.current = true;
 
-        setMoreVoices(voices);
+        setVoices((currentVoices) => [...currentVoices, ...voices]);
         voicesCursor.current = voices.at(-1)?.id;
       } catch (error) {
         console.error(error);
@@ -41,7 +41,7 @@ export const useMoreVoices = (
     isFetchingVoices.current = true;
 
     void getMoreVoices();
-  }, [inView, chatId, setMoreVoices]);
+  }, [inView, chatId, setVoices]);
 
-  return { moreVoices, voiceRef };
+  return { voiceRef };
 };
