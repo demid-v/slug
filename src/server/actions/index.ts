@@ -55,6 +55,13 @@ export const getChats = async () =>
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
 
+export const getChatName = async (chatId: number) =>
+  (
+    await db.query.chats.findFirst({
+      where: (chat, { eq }) => eq(chat.id, chatId),
+    })
+  )?.name;
+
 export const createChat = async (name: string) => {
   await db.insert(chats).values({ name });
 };
