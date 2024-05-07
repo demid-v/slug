@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { CreateChatDialog } from "~/app/_components/create-chat-dialog";
+import CreateChatDialog from "~/app/_components/create-chat-dialog";
 import { getChats } from "~/server/actions";
 
-export default async function ChatsPage() {
+const ChatsPage = async () => {
   const chats = await getChats();
 
   return (
@@ -21,4 +21,6 @@ export default async function ChatsPage() {
       </ol>
     </div>
   );
-}
+};
+
+export default ChatsPage;

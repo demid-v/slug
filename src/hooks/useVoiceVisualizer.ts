@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 
-export const useVoiceVisualizer = (url: string) => {
+const useVoiceVisualizer = (url: string) => {
   const isFetchingVoiceBlob = useRef(false);
   const [voiceBlob, setVoiceBlob] = useState<Blob>();
 
@@ -28,3 +28,5 @@ export const useVoiceVisualizer = (url: string) => {
 
   return { voiceBlob, voiceVisualizer };
 };
+
+export default useVoiceVisualizer;

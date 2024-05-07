@@ -1,8 +1,8 @@
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { SlugIcon } from "~/components/slug-icon";
+import SlugIcon from "~/components/slug-icon";
 
-export const TopNav = () => {
+const TopNav = () => {
   return (
     <nav className="flex items-center justify-between px-5 py-3">
       <Link href="/" className="flex items-center gap-3 font-bold">
@@ -20,3 +20,5 @@ export const TopNav = () => {
     </nav>
   );
 };
+
+export default TopNav;

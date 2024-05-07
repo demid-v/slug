@@ -1,4 +1,4 @@
-export const SlugIcon = ({
+const SlugIcon = ({
   width,
   height,
   className,
@@ -82,3 +82,5 @@ export const SlugIcon = ({
     </svg>
   );
 };
+
+export default SlugIcon;

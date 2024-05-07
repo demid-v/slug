@@ -3,13 +3,13 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { Recorder } from "~/components/recorder";
-import { Voice } from "~/components/voice";
+import Recorder from "~/components/recorder";
+import Voice from "~/components/voice";
 import { usePusher } from "~/hooks";
 import { useMoreVoices } from "~/hooks";
 import { type VoicesAndUserImages } from "~/server/actions";
 
-export const Chat = ({
+const Chat = ({
   name,
   initialVoices,
   cursor,
@@ -79,3 +79,5 @@ export const Chat = ({
     </div>
   );
 };
+
+export default Chat;

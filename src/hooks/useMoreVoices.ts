@@ -6,7 +6,7 @@ import {
 } from "~/server/actions";
 import { type SetState } from "~/utils/setStateType";
 
-export const useMoreVoices = (
+const useMoreVoices = (
   numberOfVoices: number,
   cursor: number | undefined,
   chatId: number,
@@ -45,3 +45,5 @@ export const useMoreVoices = (
 
   return { voiceRef };
 };
+
+export default useMoreVoices;

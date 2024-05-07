@@ -24,6 +24,10 @@ export const getVoicesAndUserImages = async (
   return await getUserImagesForVoices(voices);
 };
 
+export type VoicesAndUserImages = Awaited<
+  ReturnType<typeof getVoicesAndUserImages>
+>;
+
 export const getUserImagesForVoices = async (voices: Voice[]) =>
   (
     await Promise.allSettled(
@@ -45,10 +49,6 @@ export const getUserImagesForVoices = async (voices: Voice[]) =>
       (result) =>
         (result as PromiseFulfilledResult<Voice & { imageUrl?: string }>).value,
     );
-
-export type VoicesAndUserImages = Awaited<
-  ReturnType<typeof getVoicesAndUserImages>
->;
 
 export const getChats = async () =>
   await db.query.chats.findMany({

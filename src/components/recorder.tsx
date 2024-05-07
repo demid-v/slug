@@ -3,7 +3,7 @@ import { Radio, Mic } from "lucide-react";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import { useUploader } from "~/hooks";
 
-export const Recorder = () => {
+const Recorder = () => {
   const {
     isRecording,
     startRecording,
@@ -35,3 +35,5 @@ export const Recorder = () => {
     </div>
   );
 };
+
+export default Recorder;

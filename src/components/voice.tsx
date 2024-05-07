@@ -14,7 +14,7 @@ import { useVoice, useVoiceVisualizer } from "~/hooks";
 import { cn } from "~/utils/classes";
 import { type SetState } from "~/utils/setStateType";
 
-export const Voice = forwardRef(
+const Voice = forwardRef(
   (
     {
       imageUrl,
@@ -127,3 +127,5 @@ export const Voice = forwardRef(
 );
 
 Voice.displayName = "Voice";
+
+export default Voice;

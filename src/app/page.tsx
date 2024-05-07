@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { SlugIcon } from "~/components/slug-icon";
+import SlugIcon from "~/components/slug-icon";
 
-export default async function HomePage() {
+const HomePage = async () => {
   return (
     <>
       <SlugIcon
@@ -17,4 +17,6 @@ export default async function HomePage() {
       </h1>
     </>
   );
-}
+};
+
+export default HomePage;

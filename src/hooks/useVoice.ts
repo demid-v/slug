@@ -3,7 +3,7 @@ import { useAudioPlayer } from "react-use-audio-player";
 import { getVoiceTime } from "~/utils/getVoiceTime";
 import { type SetState } from "~/utils/setStateType";
 
-export const useVoice = (
+const useVoice = (
   url: string,
   duration: number | undefined,
   currentTime: number,
@@ -60,3 +60,5 @@ export const useVoice = (
 
   return { togglePlayPause, isPlaying, voiceTime };
 };
+
+export default useVoice;

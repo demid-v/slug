@@ -1,5 +1,5 @@
-export * from "./usePusher";
-export * from "./useVoice";
-export * from "./useVoiceVisualizer";
-export * from "./useUploader";
-export * from "./useMoreVoices";
+export { default as usePusher } from "./usePusher";
+export { default as useVoice } from "./useVoice";
+export { default as useVoiceVisualizer } from "./useVoiceVisualizer";
+export { default as useUploader } from "./useUploader";
+export { default as useMoreVoices } from "./useMoreVoices";

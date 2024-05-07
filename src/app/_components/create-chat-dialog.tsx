@@ -34,7 +34,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-export function CreateChatDialog() {
+const CreateChatDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -92,4 +92,6 @@ export function CreateChatDialog() {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default CreateChatDialog;

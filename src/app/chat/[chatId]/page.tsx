@@ -1,13 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { Chat } from "~/app/_components/chat";
+import Chat from "~/app/_components/chat";
 import { getChatName, getVoicesAndUserImages } from "~/server/actions";
 
-export default async function ChatPage({
+const ChatPage = async ({
   params: { chatId },
 }: {
   params: { chatId: string };
-}) {
+}) => {
   const { userId } = auth();
 
   const chatIdParsed = z.coerce.number().parse(chatId);
@@ -25,4 +25,6 @@ export default async function ChatPage({
       cursor={cursor}
     />
   );
-}
+};
+
+export default ChatPage;

@@ -9,7 +9,7 @@ const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
   cluster: "eu",
 });
 
-export const usePusher = (
+const usePusher = (
   chatId: number,
   setVoices: SetState<VoicesAndUserImages>,
 ) => {
@@ -32,3 +32,5 @@ export const usePusher = (
     };
   }, [channelName, setVoices]);
 };
+
+export default usePusher;

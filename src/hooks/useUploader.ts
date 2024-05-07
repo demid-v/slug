@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { z } from "zod";
 import { useUploadThing } from "~/utils/uploadthing";
 
-export const useUploader = (voiceBlob: Blob | undefined) => {
+const useUploader = (voiceBlob: Blob | undefined) => {
   const { chatId } = useParams();
   const chatIdParsed = z.coerce.number().parse(chatId);
 
@@ -35,3 +35,5 @@ export const useUploader = (voiceBlob: Blob | undefined) => {
 
   return isUploading;
 };
+
+export default useUploader;
