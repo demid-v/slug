@@ -3,19 +3,15 @@ import SlugIcon from "~/components/slug-icon";
 
 const HomePage = async () => {
   return (
-    <>
-      <SlugIcon
-        width="100%"
-        height="100%"
-        className="max-h-[450px] max-w-[450px]"
-      />
+    <div className="absolute top-1/2 flex -translate-y-2/3 flex-col items-center gap-10">
+      <SlugIcon width="100%" height="100%" className="h-fit max-w-80" />
       <h1 className="text-center text-6xl">
         <span className="font-semibold">Welcome to </span>
         <Link href="/chats" className="font-bold">
           Slug
         </Link>
       </h1>
-    </>
+    </div>
   );
 };
 
