@@ -3,7 +3,7 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
-import { chats, voices } from "~/server/db/schema";
+import { chats, users, usersToChats, voices } from "~/server/db/schema";
 
 export type Voice = InferSelectModel<typeof voices>;
 
@@ -12,7 +12,7 @@ export const getVoicesAndUserImages = async (
   cursor?: number,
 ) => {
   const voices = await db.query.voices.findMany({
-    where: (voices, { eq, and, lt }) =>
+    where: (voices, { and, eq, lt }) =>
       and(
         eq(voices.chatId, chatId),
         typeof cursor !== "undefined" ? lt(voices.id, cursor) : undefined,
@@ -81,3 +81,11 @@ export const createVoice = async (
       userId,
     })
     .returning();
+
+export const subscribeUserToChat = async (userId: string, chatId: number) => {
+  await db.insert(users).values({ id: userId }).onConflictDoNothing();
+  await db
+    .insert(usersToChats)
+    .values({ userId, chatId })
+    .onConflictDoNothing();
+};

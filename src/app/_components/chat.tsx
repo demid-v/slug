@@ -5,8 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import Recorder from "~/components/recorder";
 import Voice from "~/components/voice";
-import { usePusher } from "~/hooks";
-import { useMoreVoices } from "~/hooks";
+import { useChatSubscription, usePusher, useMoreVoices } from "~/hooks";
 import { type VoicesAndUserImages } from "~/server/actions";
 
 const Chat = ({
@@ -29,6 +28,8 @@ const Chat = ({
 
   const [voices, setVoices] = useState(initialVoices);
   const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
+
+  useChatSubscription(currentUserId, chatIdParsed);
 
   usePusher(chatIdParsed, setVoices);
 
