@@ -55,6 +55,16 @@ export const getChats = async () =>
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
 
+export const getMyChats = async (userId: string) =>
+  (
+    await db.query.usersToChats.findMany({
+      where: (usersToChats, { eq }) => eq(usersToChats.userId, userId),
+      with: {
+        chat: true,
+      },
+    })
+  ).map((usersToChats) => usersToChats.chat);
+
 export const getChatName = async (chatId: number) =>
   (
     await db.query.chats.findFirst({
