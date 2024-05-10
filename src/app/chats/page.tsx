@@ -12,7 +12,7 @@ const ChatsPage = async () => {
       <ol className="flex flex-col gap-2">
         {chats.map((chat) => (
           <li key={chat.id}>
-            <Link href={`/chat/${chat.id}`}>
+            <Link href={`/chats/${chat.id}`}>
               <div className="rounded-md border border-slate-200 p-2">
                 {chat.name}
               </div>

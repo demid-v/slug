@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getMyChats } from "~/server/actions";
 import "~/styles/globals.css";
 
-const MyChatsLayout = async () => {
+const MyChatsPage = async () => {
   const { userId } = auth();
   const myChats = userId !== null ? await getMyChats(userId) : [];
 
@@ -25,4 +25,4 @@ const MyChatsLayout = async () => {
   );
 };
 
-export default MyChatsLayout;
+export default MyChatsPage;
