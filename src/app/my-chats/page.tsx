@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import "@uploadthing/react/styles.css";
 import Link from "next/link";
 import { getMyChats } from "~/server/actions";
 import "~/styles/globals.css";

@@ -18,7 +18,7 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
-export const ourFileRouter = {
+export const voiceUploaderRouter = {
   voiceUploader: f({ audio: { maxFileSize: "4MB" } })
     .input(z.object({ duration: z.number(), chatId: z.number() }))
     .middleware(async ({ input: { duration, chatId } }) => {
@@ -49,4 +49,4 @@ export const ourFileRouter = {
     ),
 } satisfies FileRouter;
 
-export type OurFileRouter = typeof ourFileRouter;
+export type VoiceUploaderRouter = typeof voiceUploaderRouter;
