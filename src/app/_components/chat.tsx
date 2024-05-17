@@ -40,7 +40,12 @@ const Chat = ({
     setVoices,
   );
 
-  useEffect(() => () => router.refresh(), [router]);
+  useEffect(
+    () => () => {
+      router.refresh();
+    },
+    [router],
+  );
 
   return (
     <div className="flex h-full w-96 flex-col gap-8">

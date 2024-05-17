@@ -56,7 +56,9 @@ const Voice = forwardRef(
     const { voiceBlob, voiceVisualizer } = useVoiceVisualizer(url);
     const [voiceKey, setVoiceKey] = useState<number | null>(null);
 
-    useEffect(() => setVoiceKey(Math.random()), [voiceVisualizerWidth]);
+    useEffect(() => {
+      setVoiceKey(Math.random());
+    }, [voiceVisualizerWidth]);
 
     useEffect(() => {
       if (voiceContainer.current === null || voiceVisualizer.current === null)

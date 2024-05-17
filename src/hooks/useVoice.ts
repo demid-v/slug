@@ -44,7 +44,12 @@ const useVoice = (
     });
   }, [url, load, setCurrentTime, getCurrentTime]);
 
-  useEffect(() => () => stop(), [stop]);
+  useEffect(
+    () => () => {
+      stop();
+    },
+    [stop],
+  );
 
   const voiceTime = getVoiceTime(
     duration,
