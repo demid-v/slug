@@ -43,10 +43,10 @@ export const usersToChats = createTable(
   {
     userId: varchar("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     chatId: integer("chat_id")
       .notNull()
-      .references(() => chats.id),
+      .references(() => chats.id, { onDelete: "cascade" }),
   },
   (table) => ({
     primaryKey: primaryKey({ columns: [table.userId, table.chatId] }),
@@ -70,7 +70,7 @@ export const voices = createTable("voice", {
   duration: real("duration").notNull(),
   chatId: integer("chat_id")
     .notNull()
-    .references(() => chats.id),
+    .references(() => chats.id, { onDelete: "cascade" }),
   userId: varchar("user_id", { length: 256 }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
