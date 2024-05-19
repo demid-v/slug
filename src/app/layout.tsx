@@ -17,18 +17,16 @@ export const metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
-        >
+    <html lang="en">
+      <body
+        className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
+      >
+        <ClerkProvider>
           <TopNav />
-          <main className="container flex min-h-0 flex-col items-center pb-16 pt-7">
-            {children}
-          </main>
-        </body>
-      </html>
-    </ClerkProvider>
+          <main className="container min-h-0 pb-16 pt-7">{children}</main>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 };
 

@@ -48,7 +48,7 @@ const Chat = ({
   );
 
   return (
-    <div className="flex h-full w-96 flex-col gap-8">
+    <div className="flex w-96 flex-col gap-8">
       <div className="flex h-full min-h-0 flex-col justify-between border">
         <div className="border-b px-8 py-3 text-center">
           <div

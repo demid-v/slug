@@ -6,20 +6,18 @@ const ChatsPage = async () => {
   const chats = await getChats();
 
   return (
-    <div className="flex h-full w-96 flex-col gap-8">
+    <div className="flex flex-col gap-8">
       <CreateChatDialog />
 
-      <ol className="flex flex-col gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {chats.map((chat) => (
-          <li key={chat.id}>
-            <Link href={`/chats/${chat.id}`}>
-              <div className="rounded-md border border-slate-200 p-2">
-                {chat.name}
-              </div>
-            </Link>
-          </li>
+          <Link key={chat.id} href={`/chats/${chat.id}`}>
+            <div className="h-full min-h-28 rounded-md border border-slate-200 p-3">
+              {chat.name}
+            </div>
+          </Link>
         ))}
-      </ol>
+      </div>
     </div>
   );
 };
