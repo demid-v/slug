@@ -11,7 +11,8 @@ const ChatPage = async ({
 }) => {
   const { userId } = auth();
 
-  const chatIdParsed = z.coerce.number().parse(chatId);
+  const { success, data: chatIdParsed } = z.coerce.number().safeParse(chatId);
+  if (!success) return notFound();
 
   const chatName = await getChatName(chatIdParsed);
   if (typeof chatName === "undefined") return notFound();
