@@ -10,6 +10,7 @@ import path from "node:path";
 import { type FileEsque } from "uploadthing/types";
 import { db } from "~/server/db";
 import { chats, voices } from "~/server/db/schema";
+import { isPromiseFulfilledResult } from "~/utils/isPromiseFulfilled";
 
 ffmpeg.setFfprobePath(ffprobePath);
 
@@ -84,13 +85,9 @@ const seedVoices = async (chatsIds: number[]) => {
     };
   };
 
-  const isPromiseFulfilled = <T>(
-    promise: PromiseSettledResult<T>,
-  ): promise is PromiseFulfilledResult<T> => promise.status === "fulfilled";
-
   const uploadedFilesData = (
     await Promise.allSettled(files.map(getFileData))
-  ).filter(isPromiseFulfilled);
+  ).filter(isPromiseFulfilledResult);
 
   const insertVoices = async (chatId?: number) => {
     const { uploadedFileUrl, duration } =

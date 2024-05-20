@@ -4,6 +4,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, users, usersToChats, voices } from "~/server/db/schema";
+import { isPromiseFulfilledResult } from "~/utils/isPromiseFulfilled";
 
 export type Voice = InferSelectModel<typeof voices>;
 
@@ -31,24 +32,14 @@ export type VoicesAndUserImages = Awaited<
 export const getUserImagesForVoices = async (voices: Voice[]) =>
   (
     await Promise.allSettled(
-      voices.map(async (voice) => {
-        try {
-          const imageUrl = (await clerkClient.users.getUser(voice.userId))
-            .imageUrl;
-          return { ...voice, imageUrl };
-        } catch (error) {
-          console.log(error);
-        }
-
-        return voice;
-      }),
+      voices.map(async (voice) => ({
+        ...voice,
+        imageUrl: (await clerkClient.users.getUser(voice.userId)).imageUrl,
+      })),
     )
   )
-    .filter((result) => result.status === "fulfilled")
-    .map(
-      (result) =>
-        (result as PromiseFulfilledResult<Voice & { imageUrl?: string }>).value,
-    );
+    .filter(isPromiseFulfilledResult)
+    .map((result) => result.value);
 
 export const getChats = async () =>
   await db.query.chats.findMany({
