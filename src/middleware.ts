@@ -1,10 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isChatRoute = createRouteMatcher(["/chats/(.*)"]);
+const isChatsRoute = createRouteMatcher(["/chats(.*)"]);
 const isMyChatsRoute = createRouteMatcher(["/my-chats"]);
 
 export default clerkMiddleware((auth, request) => {
-  if (isChatRoute(request) || isMyChatsRoute(request)) auth().protect();
+  if (isChatsRoute(request) || isMyChatsRoute(request)) auth().protect();
 });
 
 export const config = {
