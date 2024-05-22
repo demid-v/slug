@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
-import { getVoiceTime } from "~/utils/getVoiceTime";
-import { type SetState } from "~/utils/setStateType";
+import { getVoiceTime } from "~/utils";
+import { type SetState } from "~/utils/types";
 
 const useVoice = (
   url: string,

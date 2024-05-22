@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import superjson from "superjson";
 import { env } from "~/env";
 import { type VoicesAndUserImages } from "~/server/actions";
-import { type SetState } from "~/utils/setStateType";
+import { type SetState } from "~/utils/types";
 
 const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
   cluster: "eu",

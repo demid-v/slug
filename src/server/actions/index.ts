@@ -4,7 +4,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, users, usersToChats, voices } from "~/server/db/schema";
-import { isPromiseFulfilledResult } from "~/utils/isPromiseFulfilled";
+import { isPromiseFulfilledResult } from "~/utils";
 
 export type Voice = InferSelectModel<typeof voices>;
 

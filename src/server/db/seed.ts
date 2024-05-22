@@ -10,7 +10,7 @@ import path from "node:path";
 import { type FileEsque } from "uploadthing/types";
 import { db } from "~/server/db";
 import { chats, voices } from "~/server/db/schema";
-import { isPromiseFulfilledResult } from "~/utils/isPromiseFulfilled";
+import { isPromiseFulfilledResult } from "~/utils";
 
 ffmpeg.setFfprobePath(ffprobePath);
 

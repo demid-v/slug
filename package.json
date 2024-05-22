@@ -9,10 +9,10 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx ./src/server/db/seed.ts",
     "dev": "next dev",
+    "fix-all": "pnpm run format-all && pnpm run tsc-check && pnpm run lint",
     "format-all": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
     "tsc-check": "tsc --noEmit",
     "lint": "next lint",
-    "fix-all": "pnpm run format-all && pnpm run tsc-check && pnpm run lint",
     "start": "next start"
   },
   "dependencies": {

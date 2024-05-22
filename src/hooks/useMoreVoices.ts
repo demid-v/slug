@@ -4,7 +4,7 @@ import {
   getVoicesAndUserImages,
   type VoicesAndUserImages,
 } from "~/server/actions";
-import { type SetState } from "~/utils/setStateType";
+import { type SetState } from "~/utils/types";
 
 const useMoreVoices = (
   numberOfVoices: number,

@@ -12,7 +12,7 @@ import {
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
 import { cn } from "~/utils/classes";
-import { type SetState } from "~/utils/setStateType";
+import { type SetState } from "~/utils/types";
 
 const Voice = forwardRef(
   (

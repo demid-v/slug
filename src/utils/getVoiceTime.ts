@@ -11,7 +11,7 @@ const formatTime = (time: number | undefined) => {
   return `${minutes}:${seconds}`;
 };
 
-export const getVoiceTime = (
+const getVoiceTime = (
   duration: number | undefined,
   currentTime: number,
   isPlaying: boolean,
@@ -22,3 +22,5 @@ export const getVoiceTime = (
     ? formatTime(currentTime)
     : formatTime(duration);
 };
+
+export default getVoiceTime;
