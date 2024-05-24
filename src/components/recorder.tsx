@@ -1,7 +1,6 @@
 import { Button } from "./ui/button";
 import { Radio, Mic } from "lucide-react";
-import { useAudioRecorder } from "react-audio-voice-recorder";
-import { useUploader } from "~/hooks";
+import { useAudioRecorder, useUploader } from "~/hooks";
 
 const Recorder = () => {
   const {
