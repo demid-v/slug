@@ -23,7 +23,7 @@ const usePusher = (
         JSON.stringify(voice),
       );
 
-      setVoices((currentVoices) => [...currentVoices, parsedVoice]);
+      setVoices((currentVoices) => [parsedVoice, ...currentVoices]);
     });
 
     return () => {
