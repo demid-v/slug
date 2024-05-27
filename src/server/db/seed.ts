@@ -1,13 +1,14 @@
 import { utapi } from "../uploadthing";
 import { clerkClient } from "@clerk/clerk-sdk-node";
-import { fakerEN } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { path as ffprobePath } from "@ffprobe-installer/ffprobe";
 import { Blob } from "buffer";
 import "dotenv/config";
 import { getTableName, sql } from "drizzle-orm";
 import ffmpeg from "fluent-ffmpeg";
-import fs, { type Dirent } from "fs";
-import path from "node:path";
+import { type Dirent } from "fs";
+import { readFile, readdir } from "fs/promises";
+import path from "path";
 import { type FileEsque } from "uploadthing/types";
 import { db } from "~/server/db";
 import { chats, usersToChats, voices } from "~/server/db/schema";
@@ -41,7 +42,7 @@ const seedChats = async () => {
     { name: "🎥 ᴍɪʟʟɪᴏɴ ᴍᴏᴠɪᴇꜱ | ᴍᴏᴠɪᴇ ʀᴇQᴜᴇꜱᴛɪɴɢ ɢʀᴏᴜᴘ 2024" },
     { name: "Заброшенный мир" },
     ...new Array(100).fill(0).map(() => ({
-      name: fakerEN.lorem.words({ min: 1, max: 25 }).slice(0, 128),
+      name: faker.lorem.words({ min: 1, max: 25 }).slice(0, 128),
     })),
   ];
 
@@ -50,7 +51,7 @@ const seedChats = async () => {
   );
 };
 
-const randomUserId = fakerEN.helpers.arrayElement(
+const randomUserId = faker.helpers.arrayElement(
   (await clerkClient.users.getUserList()).data,
 ).id;
 
@@ -71,7 +72,7 @@ const uploadMockVoices = async () => {
 
   const getMockVoiceData = async (mockVoice: Dirent) => {
     const mockVoiceBlob = new Blob([
-      fs.readFileSync(`${mockVoice.parentPath}/${mockVoice.name}`),
+      await readFile(`${mockVoice.parentPath}/${mockVoice.name}`),
     ]) as FileEsque;
     mockVoiceBlob.name = mockVoice.name;
 
@@ -84,31 +85,32 @@ const uploadMockVoices = async () => {
     };
   };
 
-  const queries = fs
-    .readdirSync(mockVoicesPath, { withFileTypes: true })
+  const fileUploadRequests = (
+    await readdir(mockVoicesPath, { withFileTypes: true })
+  )
     .filter((dirent) => dirent.isFile())
     .map(getMockVoiceData);
 
-  return (await Promise.allSettled(queries)).filter(isPromiseFulfilledResult);
+  return (await Promise.allSettled(fileUploadRequests)).filter(
+    isPromiseFulfilledResult,
+  );
 };
 
 const seedVoices = async (
   uploadedMockVoices: Awaited<ReturnType<typeof uploadMockVoices>>,
 ) => {
-  const createInsertVoicesQueries = (
-    chatId: number,
-    numberOfVoices: number,
-  ) => {
-    const { url = "", duration = 0 } =
-      fakerEN.helpers.arrayElement(uploadedMockVoices).value ?? {};
+  const createInsertVoicesQueries = (chatId: number, numberOfVoices: number) =>
+    new Array(numberOfVoices).fill(0).map(() => {
+      const { url = "", duration = 0 } =
+        faker.helpers.arrayElement(uploadedMockVoices).value ?? {};
 
-    return new Array(numberOfVoices).fill(0).map(() => ({
-      url,
-      duration,
-      userId: randomUserId,
-      chatId,
-    }));
-  };
+      return {
+        url,
+        duration,
+        userId: randomUserId,
+        chatId,
+      };
+    });
 
   const values = [
     ...createInsertVoicesQueries(2, 1),
@@ -121,7 +123,7 @@ const seedVoices = async (
 };
 
 const seedUsersChatsSubscriptions = async (chatIds: number[]) => {
-  const randomChatIds = fakerEN.helpers.arrayElements(chatIds, 30);
+  const randomChatIds = faker.helpers.arrayElements(chatIds, 30);
 
   const queries = randomChatIds.map((chatId) =>
     db.insert(usersToChats).values({ chatId, userId: randomUserId }),
