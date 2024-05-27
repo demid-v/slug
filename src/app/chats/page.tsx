@@ -6,7 +6,7 @@ const ChatsPage = async () => {
   const chats = await getChats();
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 pb-16">
       <CreateChatDialog />
 
       <div className="grid grid-cols-4 gap-2">
