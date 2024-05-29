@@ -41,8 +41,10 @@ export const getUserImagesForVoices = async (voices: Voice[]) =>
     .filter(isPromiseFulfilledResult)
     .map((result) => result.value);
 
-export const getChats = async () =>
+export const getChats = async (offset?: number, limit = 40) =>
   await db.query.chats.findMany({
+    offset,
+    limit,
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
 
