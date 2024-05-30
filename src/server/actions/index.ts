@@ -19,7 +19,7 @@ export const getVoicesAndUserImages = async (
         typeof cursor !== "undefined" ? lt(voices.id, cursor) : undefined,
       ),
     limit: 15,
-    orderBy: (voices, { desc }) => [desc(voices.createdAt)],
+    orderBy: (voices, { desc }) => [desc(voices.id)],
   });
 
   return await getUserImagesForVoices(voices);
@@ -45,7 +45,7 @@ export const getChats = async (page = 1, limit = 40) =>
   await db.query.chats.findMany({
     offset: (page - 1) * limit,
     limit,
-    orderBy: (voices, { desc }) => [desc(voices.createdAt)],
+    orderBy: (voices, { desc }) => [desc(voices.id)],
   });
 
 export const getMyChats = async (userId: string) =>
