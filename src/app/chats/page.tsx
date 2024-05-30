@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { z } from "zod";
 import CreateChatDialog from "~/app/_components/create-chat-dialog";
-import { getChats } from "~/server/actions";
+import ChatsPagination from "~/components/chats-pagination";
+import { getChats, getChatsCount } from "~/server/actions";
 
 const ChatsPage = async ({
   searchParams,
@@ -17,10 +18,12 @@ const ChatsPage = async ({
   const { page, limit } = parsedSearchParams ?? {};
 
   const chats = await getChats(page, limit);
+  const chatsCount = await getChatsCount();
 
   return (
     <div className="flex flex-col gap-8 pb-16">
       <CreateChatDialog />
+      <ChatsPagination page={page} limit={limit} chatsCount={chatsCount} />
 
       <div className="grid grid-cols-4 gap-2">
         {chats.map(({ id, name }) => (
@@ -31,6 +34,8 @@ const ChatsPage = async ({
           </Link>
         ))}
       </div>
+
+      <ChatsPagination page={page} limit={limit} chatsCount={chatsCount} />
     </div>
   );
 };

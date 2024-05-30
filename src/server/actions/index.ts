@@ -1,7 +1,7 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
-import { type InferSelectModel } from "drizzle-orm";
+import { count, type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, users, usersToChats, voices } from "~/server/db/schema";
 import { isPromiseFulfilledResult } from "~/utils";
@@ -41,9 +41,9 @@ export const getUserImagesForVoices = async (voices: Voice[]) =>
     .filter(isPromiseFulfilledResult)
     .map((result) => result.value);
 
-export const getChats = async (offset?: number, limit = 40) =>
+export const getChats = async (page = 1, limit = 40) =>
   await db.query.chats.findMany({
-    offset,
+    offset: (page - 1) * limit,
     limit,
     orderBy: (voices, { desc }) => [desc(voices.createdAt)],
   });
@@ -92,3 +92,6 @@ export const subscribeUserToChat = async (userId: string, chatId: number) => {
     .values({ userId, chatId })
     .onConflictDoNothing();
 };
+
+export const getChatsCount = async () =>
+  (await db.select({ count: count() }).from(chats))[0]?.count ?? 0;
