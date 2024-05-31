@@ -2,7 +2,7 @@
 
 import { ratelimitChats } from "../ratelimit";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { count, type InferSelectModel } from "drizzle-orm";
+import { type InferSelectModel, count } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, users, usersToChats, voices } from "~/server/db/schema";
 import { isPromiseFulfilledResult } from "~/utils";

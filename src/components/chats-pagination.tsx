@@ -1,11 +1,11 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
   PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
   PaginationNext,
+  PaginationPrevious,
 } from "./ui/pagination";
 import { pagination } from "~/utils";
 import { cn } from "~/utils/classes";

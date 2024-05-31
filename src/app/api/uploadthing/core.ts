@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import Pusher from "pusher";
 import superjson from "superjson";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { type FileRouter, createUploadthing } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
 import { env } from "~/env";

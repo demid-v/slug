@@ -9,6 +9,7 @@ const config = {
     "prettier-plugin-tailwindcss",
   ],
   importOrder: [],
+  importOrderSortSpecifiers: true,
 };
 
 export default config;

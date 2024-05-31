@@ -1,8 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import {
-  getVoicesAndUserImages,
   type VoicesAndUserImages,
+  getVoicesAndUserImages,
 } from "~/server/actions";
 import { type SetState } from "~/utils/types";
 

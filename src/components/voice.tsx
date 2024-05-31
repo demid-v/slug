@@ -2,12 +2,12 @@ import { Button } from "./ui/button";
 import { Pause, Play, User2 } from "lucide-react";
 import Image from "next/image";
 import {
+  type ForwardedRef,
+  forwardRef,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
-  forwardRef,
-  type ForwardedRef,
-  useImperativeHandle,
 } from "react";
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
