@@ -6,7 +6,7 @@ import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
 import { env } from "~/env";
 import { createVoice, getUserImagesForVoices } from "~/server/actions";
-import { ratelimit } from "~/server/ratelimit";
+import { ratelimitVoices } from "~/server/ratelimit";
 
 const f = createUploadthing();
 
@@ -25,7 +25,7 @@ export const voiceUploaderRouter = {
       const { userId } = auth();
       if (!userId) throw new UploadThingError("Unauthorized");
 
-      const { success } = await ratelimit.limit(userId);
+      const { success } = await ratelimitVoices.limit(userId);
       if (!success) throw new UploadThingError("Too many requests");
 
       return { duration, chatId, userId };

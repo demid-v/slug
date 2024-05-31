@@ -1,6 +1,7 @@
 "use server";
 
-import { clerkClient } from "@clerk/nextjs/server";
+import { ratelimitChats } from "../ratelimit";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { count, type InferSelectModel } from "drizzle-orm";
 import { db } from "~/server/db";
 import { chats, users, usersToChats, voices } from "~/server/db/schema";
@@ -66,6 +67,12 @@ export const getChatName = async (chatId: number) =>
   )?.name;
 
 export const createChat = async (name: string) => {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const { success } = await ratelimitChats.limit(userId);
+  if (!success) throw new Error("Too many requests");
+
   await db.insert(chats).values({ name });
 };
 
