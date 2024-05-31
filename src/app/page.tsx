@@ -1,4 +1,3 @@
-import Link from "next/link";
 import SlugIcon from "~/components/slug-icon";
 
 const HomePage = async () => {
@@ -8,9 +7,7 @@ const HomePage = async () => {
         <SlugIcon width="100%" height="100%" className="h-fit max-w-80" />
         <h1 className="text-center text-6xl">
           <span className="font-semibold">Welcome to </span>
-          <Link href="/chats" className="font-bold">
-            Slug
-          </Link>
+          <span className="font-bold">Slug</span>
         </h1>
       </div>
     </div>

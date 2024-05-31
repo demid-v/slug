@@ -1,4 +1,4 @@
-import TopNav from "./_components/top-nav";
+import TopHeader from "./_components/top-header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import { type ReactNode } from "react";
@@ -22,7 +22,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
       >
         <ClerkProvider>
-          <TopNav />
+          <TopHeader />
           <main className="container min-h-0 pb-16 pt-7">{children}</main>
         </ClerkProvider>
       </body>
