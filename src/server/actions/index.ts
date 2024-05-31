@@ -20,7 +20,7 @@ export const getVoicesAndUserImages = async (
         typeof cursor !== "undefined" ? lt(voices.id, cursor) : undefined,
       ),
     limit: 15,
-    orderBy: (voices, { desc }) => [desc(voices.id)],
+    orderBy: (voices, { desc }) => [desc(voices.createdAt), desc(voices.id)],
   });
 
   return await getUserImagesForVoices(voices);
@@ -46,7 +46,7 @@ export const getChats = async (page = 1, limit = 40) =>
   await db.query.chats.findMany({
     offset: (page - 1) * limit,
     limit,
-    orderBy: (voices, { desc }) => [desc(voices.id)],
+    orderBy: (chats, { desc }) => [desc(chats.createdAt), desc(voices.id)],
   });
 
 export const getMyChats = async (userId: string) =>
@@ -56,6 +56,7 @@ export const getMyChats = async (userId: string) =>
       with: {
         chat: true,
       },
+      orderBy: (usersToChats, { desc }) => [desc(usersToChats.joinedAt)],
     })
   ).map((usersToChats) => usersToChats.chat);
 

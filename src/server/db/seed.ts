@@ -44,7 +44,12 @@ const seedChats = async () => {
     ...new Array(100).fill(0).map(() => ({
       name: faker.lorem.words({ min: 1, max: 25 }).slice(0, 128),
     })),
-  ];
+  ]
+    .map((chat) => ({ ...chat, createdAt: faker.date.past({ years: 2 }) }))
+    .sort(
+      (firstChat, secondChat) =>
+        firstChat.createdAt.getTime() - secondChat.createdAt.getTime(),
+    );
 
   return (await db.insert(chats).values(chatsData).returning()).map(
     (chat) => chat.id,
@@ -99,7 +104,7 @@ const uploadMockVoices = async () => {
 const seedVoices = async (
   uploadedMockVoices: Awaited<ReturnType<typeof uploadMockVoices>>,
 ) => {
-  const createInsertVoicesQueries = (chatId: number, numberOfVoices: number) =>
+  const createVoicesData = (chatId: number, numberOfVoices: number) =>
     new Array(numberOfVoices).fill(0).map(() => {
       const { url = "", duration = 0 } =
         faker.helpers.arrayElement(uploadedMockVoices).value ?? {};
@@ -109,24 +114,31 @@ const seedVoices = async (
         duration,
         userId: randomUserId,
         chatId,
+        createdAt: faker.date.past({ years: 2 }),
       };
     });
 
-  const values = [
-    ...createInsertVoicesQueries(2, 1),
-    ...createInsertVoicesQueries(3, 5),
-    ...createInsertVoicesQueries(4, 15),
-    ...createInsertVoicesQueries(5, 50),
-  ];
+  const voicesData = [
+    ...createVoicesData(2, 1),
+    ...createVoicesData(3, 5),
+    ...createVoicesData(4, 15),
+    ...createVoicesData(5, 50),
+  ].sort(
+    (firstVoice, secondVoice) =>
+      firstVoice.createdAt.getTime() - secondVoice.createdAt.getTime(),
+  );
 
-  await db.insert(voices).values(values);
+  await db.insert(voices).values(voicesData);
 };
 
 const seedUsersChatsSubscriptions = async (chatIds: number[]) => {
-  const randomChatIds = faker.helpers.arrayElements(chatIds, 30);
+  const chatIdsAndJoinAtDatetimes = new Array(30).fill(0).map(() => ({
+    chatId: faker.helpers.arrayElement(chatIds),
+    joinedAt: faker.date.past({ years: 1 }),
+  }));
 
-  const queries = randomChatIds.map((chatId) =>
-    db.insert(usersToChats).values({ chatId, userId: randomUserId }),
+  const queries = chatIdsAndJoinAtDatetimes.map(({ chatId, joinedAt }) =>
+    db.insert(usersToChats).values({ chatId, userId: randomUserId, joinedAt }),
   );
 
   await Promise.allSettled(queries);

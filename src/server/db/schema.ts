@@ -47,6 +47,9 @@ export const usersToChats = createTable(
     chatId: integer("chat_id")
       .notNull()
       .references(() => chats.id, { onDelete: "cascade" }),
+    joinedAt: timestamp("joined_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
   },
   (table) => ({
     primaryKey: primaryKey({ columns: [table.userId, table.chatId] }),
