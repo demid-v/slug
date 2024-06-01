@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import { type ReactNode } from "react";
 import "~/styles/globals.css";
+import { TRPCReactProvider } from "~/trpc/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,8 +23,10 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
       >
         <ClerkProvider>
-          <TopHeader />
-          <main className="container min-h-0 pb-16 pt-7">{children}</main>
+          <TRPCReactProvider>
+            <TopHeader />
+            <main className="container min-h-0 pb-16 pt-7">{children}</main>
+          </TRPCReactProvider>
         </ClerkProvider>
       </body>
     </html>
