@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { createChat } from "~/server/actions";
+import { api } from "~/trpc/react";
 
 const formSchema = z.object({
   name: z
@@ -45,14 +45,15 @@ const CreateChatDialog = () => {
     },
   });
 
+  const { mutate: createChat } = api.chats.createChat.useMutation();
+
   const handleCreateChat = async (values: FormSchema) => {
-    try {
-      await createChat(values.name);
-      setIsOpen(false);
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-    }
+    createChat(values.name, {
+      onSuccess: () => {
+        setIsOpen(false);
+        router.refresh();
+      },
+    });
   };
 
   return (

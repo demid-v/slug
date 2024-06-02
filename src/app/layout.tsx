@@ -22,12 +22,12 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       <body
         className={`font-sans ${inter.variable} grid h-svh grid-rows-[auto_1fr]`}
       >
-        <ClerkProvider>
-          <TRPCReactProvider>
+        <TRPCReactProvider>
+          <ClerkProvider>
             <TopHeader />
             <main className="container min-h-0 pb-16 pt-7">{children}</main>
-          </TRPCReactProvider>
-        </ClerkProvider>
+          </ClerkProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

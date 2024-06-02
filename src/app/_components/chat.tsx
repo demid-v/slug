@@ -1,51 +1,29 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useRef, useState } from "react";
 import { z } from "zod";
 import Recorder from "~/components/recorder";
 import Voice from "~/components/voice";
-import { useChatSubscription, useMoreVoices, usePusher } from "~/hooks";
-import { type VoicesAndUserImages } from "~/server/actions";
+import { useChatSubscription, useInfiniteVoices, usePusher } from "~/hooks";
+import { api } from "~/trpc/react";
 
-const Chat = ({
-  name,
-  initialVoices,
-  cursor,
-  currentUserId,
-}: {
-  name: string | undefined;
-  initialVoices: VoicesAndUserImages;
-  cursor: number | undefined;
-  currentUserId: string | null;
-}) => {
-  const router = useRouter();
+const Chat = ({ currentUserId }: { currentUserId: string | null }) => {
   const { chatId } = useParams();
 
   const chatIdParsed = z.coerce.number().parse(chatId);
+  const { data: chatName } = api.chats.chatName.useQuery(chatIdParsed, {
+    refetchOnWindowFocus: false,
+  });
 
   const chat = useRef<HTMLDivElement | null>(null);
 
-  const [voices, setVoices] = useState(initialVoices);
   const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
 
+  const { voices, voiceRef } = useInfiniteVoices(chatIdParsed);
+
   useChatSubscription(currentUserId, chatIdParsed);
-
-  usePusher(chatIdParsed, setVoices);
-
-  const { voiceRef } = useMoreVoices(
-    initialVoices.length,
-    cursor,
-    chatIdParsed,
-    setVoices,
-  );
-
-  useEffect(
-    () => () => {
-      router.refresh();
-    },
-    [router],
-  );
+  usePusher(chatIdParsed);
 
   return (
     <div className="flex w-96 flex-col gap-8">
@@ -53,9 +31,9 @@ const Chat = ({
         <div className="border-b px-8 py-3 text-center">
           <div
             className="mx-auto overflow-hidden text-ellipsis whitespace-nowrap"
-            title={name}
+            title={chatName}
           >
-            {name}
+            {chatName}
           </div>
         </div>
         <div

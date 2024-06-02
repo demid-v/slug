@@ -1,12 +1,28 @@
-import { useEffect } from "react";
-import { subscribeUserToChat } from "~/server/actions";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { api } from "~/trpc/react";
 
 const useChatSubscription = (userId: string | null, chatId: number) => {
-  useEffect(() => {
-    if (userId === null) return;
+  const router = useRouter();
 
-    void subscribeUserToChat(userId, chatId);
-  }, [userId, chatId]);
+  const { mutate: subscribeUserToChat } =
+    api.users.subscribeUserToChat.useMutation();
+
+  const isSubscribed = useRef(false);
+
+  useEffect(() => {
+    if (userId === null || isSubscribed.current) return;
+
+    subscribeUserToChat(
+      { userId, chatId },
+      {
+        onSuccess: () => {
+          isSubscribed.current = true;
+          router.refresh();
+        },
+      },
+    );
+  }, [userId, chatId, router, subscribeUserToChat]);
 };
 
 export default useChatSubscription;

@@ -6,6 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
+import { ratelimitChats } from "../ratelimit";
 import { auth } from "@clerk/nextjs/server";
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
@@ -103,3 +104,17 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
+
+/**
+ * Ratelimited protected chats procedure
+ *
+ * Use this if you want your chats query to be protected and ratelimited.
+ */
+export const ratelimitedChatsProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
+    const { success } = await ratelimitChats.limit(ctx.session.userId);
+    if (!success) throw new Error("Too many requests");
+
+    return next();
+  },
+);

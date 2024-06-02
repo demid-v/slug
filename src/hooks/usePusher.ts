@@ -1,36 +1,29 @@
 import Pusher from "pusher-js";
 import { useEffect } from "react";
-import superjson from "superjson";
 import { env } from "~/env";
-import { type VoicesAndUserImages } from "~/server/actions";
-import { type SetState } from "~/utils/types";
+import { api } from "~/trpc/react";
 
 const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
   cluster: "eu",
 });
 
-const usePusher = (
-  chatId: number,
-  setVoices: SetState<VoicesAndUserImages>,
-) => {
+const usePusher = (chatId: number) => {
   const channelName = `slug-chat-${chatId}`;
+
+  const utils = api.useUtils();
 
   useEffect(() => {
     const channel = pusher.subscribe(channelName);
 
-    channel.bind("voice", (voice: object) => {
-      const parsedVoice = superjson.parse<VoicesAndUserImages[number]>(
-        JSON.stringify(voice),
-      );
-
-      setVoices((currentVoices) => [parsedVoice, ...currentVoices]);
+    channel.bind("voice", () => {
+      void utils.voices.voicesAndUserImages.invalidate({ chatId });
     });
 
     return () => {
       pusher.unsubscribe(channelName);
       channel.unbind("voice");
     };
-  }, [channelName, setVoices]);
+  }, [channelName, chatId, utils.voices.voicesAndUserImages]);
 };
 
 export default usePusher;

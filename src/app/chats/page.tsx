@@ -2,7 +2,7 @@ import Link from "next/link";
 import { z } from "zod";
 import CreateChatDialog from "~/app/_components/create-chat-dialog";
 import ChatsPagination from "~/components/chats-pagination";
-import { getChats, getChatsCount } from "~/server/actions";
+import { api } from "~/trpc/server";
 
 const ChatsPage = async ({
   searchParams,
@@ -17,8 +17,8 @@ const ChatsPage = async ({
     .safeParse(searchParams);
   const { page, limit } = parsedSearchParams ?? {};
 
-  const chats = await getChats(page, limit);
-  const chatsCount = await getChatsCount();
+  const chats = await api.chats.chats({ page, limit });
+  const chatsCount = await api.chats.chatsCount();
 
   return (
     <div className="flex flex-col gap-8 pb-16">

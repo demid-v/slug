@@ -5,7 +5,7 @@ import { type FileRouter, createUploadthing } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { z } from "zod";
 import { env } from "~/env";
-import { createVoice, getUserImagesForVoices } from "~/server/actions";
+import { createVoice, getUserImagesForVoices } from "~/server/queries";
 import { ratelimitVoices } from "~/server/ratelimit";
 
 const f = createUploadthing();

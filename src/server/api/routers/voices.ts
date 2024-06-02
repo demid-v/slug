@@ -1,22 +1,17 @@
 import { z } from "zod";
-import { type Voice } from "~/server/actions";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { getUserImagesForVoices } from "~/server/queries";
 
 export const voicesRouter = createTRPCRouter({
-  getUserImagesForVoices: protectedProcedure
-    .input(z.custom<Voice[]>())
-    .query(async ({ input: voices }) => await getUserImagesForVoices(voices)),
-
-  getVoicesAndUserImages: protectedProcedure
-    .input(z.object({ chatId: z.number(), cursor: z.number().optional() }))
+  voicesAndUserImages: protectedProcedure
+    .input(z.object({ chatId: z.number(), cursor: z.number().nullish() }))
     .query(async ({ input: { chatId, cursor } }) => {
       const voices = await db.query.voices.findMany({
         where: (voices, { and, eq, lt }) =>
           and(
             eq(voices.chatId, chatId),
-            typeof cursor !== "undefined" ? lt(voices.id, cursor) : undefined,
+            cursor != null ? lt(voices.id, cursor) : undefined,
           ),
         limit: 15,
         orderBy: (voices, { desc }) => [
@@ -25,6 +20,9 @@ export const voicesRouter = createTRPCRouter({
         ],
       });
 
-      return await getUserImagesForVoices(voices);
+      const voicesAndUserImages = await getUserImagesForVoices(voices);
+      const nextCursor = voices.at(-1)?.id ?? 0;
+
+      return { voices: voicesAndUserImages, nextCursor };
     }),
 });

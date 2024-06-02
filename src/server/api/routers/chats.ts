@@ -1,11 +1,15 @@
 import { count } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  ratelimitedChatsProcedure,
+} from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { chats, voices } from "~/server/db/schema";
 
 export const chatsRouter = createTRPCRouter({
-  getChats: protectedProcedure
+  chats: protectedProcedure
     .input(
       z.object({
         page: z.number().optional().default(1),
@@ -24,7 +28,7 @@ export const chatsRouter = createTRPCRouter({
         }),
     ),
 
-  getMyChats: protectedProcedure
+  myChats: protectedProcedure
     .input(z.string())
     .query(async ({ input: userId }) =>
       (
@@ -38,7 +42,7 @@ export const chatsRouter = createTRPCRouter({
       ).map((usersToChats) => usersToChats.chat),
     ),
 
-  getChatName: protectedProcedure.input(z.number()).query(
+  chatName: protectedProcedure.input(z.number()).query(
     async ({ input: chatId }) =>
       (
         await db.query.chats.findFirst({
@@ -47,8 +51,14 @@ export const chatsRouter = createTRPCRouter({
       )?.name,
   ),
 
-  getChatsCount: protectedProcedure.query(
+  chatsCount: protectedProcedure.query(
     async () =>
       (await db.select({ count: count() }).from(chats))[0]?.count ?? 0,
   ),
+
+  createChat: ratelimitedChatsProcedure
+    .input(z.string())
+    .mutation(async ({ input: name }) => {
+      await db.insert(chats).values({ name });
+    }),
 });

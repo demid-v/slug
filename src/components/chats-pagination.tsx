@@ -20,14 +20,12 @@ const ChatsPagination = ({
   chatsCount: number;
 }) => {
   const paginationRange = pagination({
-    totalCount: chatsCount ?? 0,
+    totalCount: chatsCount,
     limit,
     currentPage: page,
   });
 
-  if (paginationRange.length < 2) {
-    return null;
-  }
+  if (paginationRange.length < 2) return null;
 
   const lastPage = paginationRange.at(-1);
 

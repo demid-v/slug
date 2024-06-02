@@ -1,11 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { getMyChats } from "~/server/actions";
+import { api } from "~/trpc/server";
 import { cn } from "~/utils/classes";
 
 const MyChats = async ({ className }: { className?: string }) => {
   const { userId } = auth();
-  const myChats = userId !== null ? await getMyChats(userId) : [];
+  if (!userId) throw new Error("Unauthorized");
+
+  const myChats = await api.chats.myChats(userId);
 
   return (
     <ol
