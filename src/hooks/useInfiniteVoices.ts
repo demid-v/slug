@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { api } from "~/trpc/react";
+import { type VoicesAndUserImages } from "~/trpc/types";
 
-const useInfiniteVoices = (chatId: number) => {
+const useInfiniteVoices = (
+  chatId: number,
+  initialVoices: VoicesAndUserImages,
+) => {
   const { ref: voiceRef, inView } = useInView();
 
   const { data: voicesData, fetchNextPage } =
@@ -11,6 +15,7 @@ const useInfiniteVoices = (chatId: number) => {
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         refetchOnWindowFocus: false,
+        initialData: { pages: [initialVoices], pageParams: [] },
       },
     );
 

@@ -1,9 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import Chat from "~/app/_components/chat";
-import { helpers } from "~/trpc/helpers";
+import { api } from "~/trpc/server";
 
 const ChatPage = async ({
   params: { chatId },
@@ -15,19 +14,15 @@ const ChatPage = async ({
   const { success, data: chatIdParsed } = z.coerce.number().safeParse(chatId);
   if (!success) return notFound();
 
-  const chatName = await helpers.chats.chatName.fetch(chatIdParsed);
+  const chatName = await api.chats.chatName(chatIdParsed);
   if (typeof chatName === "undefined") return notFound();
 
-  await helpers.voices.voicesAndUserImages.prefetchInfinite({
+  const voices = await api.voices.voicesAndUserImages({
     chatId: chatIdParsed,
   });
 
-  const dehydratedState = dehydrate(helpers.queryClient);
-
   return (
-    <HydrationBoundary state={dehydratedState}>
-      <Chat currentUserId={userId} />
-    </HydrationBoundary>
+    <Chat chatName={chatName} initialVoices={voices} currentUserId={userId} />
   );
 };
 
