@@ -2,6 +2,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Navigation from "~/components/navigation";
 import SlugIcon from "~/components/slug-icon";
+import { Button } from "~/components/ui/button";
 
 const TopHeader = () => {
   return (
@@ -11,11 +12,13 @@ const TopHeader = () => {
           <SlugIcon width={32} height={32} />
           <span>Slug</span>
         </Link>
-        <Navigation />
+        <SignedIn>
+          <Navigation />
+        </SignedIn>
       </div>
       <SignedOut>
         <SignInButton>
-          <button className="font-medium">Sign in</button>
+          <Button>Sign in</Button>
         </SignInButton>
       </SignedOut>
       <SignedIn>
