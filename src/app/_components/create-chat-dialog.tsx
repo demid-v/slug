@@ -45,11 +45,11 @@ const CreateChatDialog = () => {
     },
   });
 
-  const { mutate: createChat } = api.chats.createChat.useMutation();
+  const { mutate: createChat } = api.chats.create.useMutation();
 
   const handleCreateChat = async (values: FormSchema) => {
     createChat(values.name, {
-      onSuccess: () => {
+      onSuccess() {
         setIsOpen(false);
         router.refresh();
       },

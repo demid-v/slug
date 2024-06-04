@@ -14,10 +14,10 @@ const ChatPage = async ({
   const { success, data: chatIdParsed } = z.coerce.number().safeParse(chatId);
   if (!success) return notFound();
 
-  const chatName = await api.chats.chatName(chatIdParsed);
+  const chatName = await api.chats.name(chatIdParsed);
   if (typeof chatName === "undefined") return notFound();
 
-  const voices = await api.voices.voicesAndUserImages({
+  const voices = await api.voices.withUserImage({
     chatId: chatIdParsed,
   });
 

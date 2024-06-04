@@ -4,7 +4,7 @@ import { db } from "~/server/db";
 import { getUserImagesForVoices } from "~/server/queries";
 
 export const voicesRouter = createTRPCRouter({
-  voicesAndUserImages: protectedProcedure
+  withUserImage: protectedProcedure
     .input(z.object({ chatId: z.number(), cursor: z.number().nullish() }))
     .query(async ({ input: { chatId, cursor } }) => {
       const voices = await db.query.voices.findMany({

@@ -6,7 +6,7 @@ import { z } from "zod";
 import Recorder from "~/components/recorder";
 import Voice from "~/components/voice";
 import { useChatSubscription, useInfiniteVoices, usePusher } from "~/hooks";
-import { type VoicesAndUserImages } from "~/trpc/types";
+import { type VoicesWithUserImage } from "~/trpc/types";
 
 const Chat = ({
   chatName,
@@ -14,7 +14,7 @@ const Chat = ({
   currentUserId,
 }: {
   chatName: string;
-  initialVoices: VoicesAndUserImages;
+  initialVoices: VoicesWithUserImage;
   currentUserId: string | null;
 }) => {
   const { chatId } = useParams();

@@ -16,14 +16,14 @@ const usePusher = (chatId: number) => {
     const channel = pusher.subscribe(channelName);
 
     channel.bind("voice", () => {
-      void utils.voices.voicesAndUserImages.invalidate({ chatId });
+      void utils.voices.withUserImage.invalidate({ chatId });
     });
 
     return () => {
       pusher.unsubscribe(channelName);
       channel.unbind("voice");
     };
-  }, [channelName, chatId, utils.voices.voicesAndUserImages]);
+  }, [channelName, chatId, utils.voices.withUserImage]);
 };
 
 export default usePusher;

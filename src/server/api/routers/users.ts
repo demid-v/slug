@@ -4,7 +4,7 @@ import { db } from "~/server/db";
 import { users, usersToChats } from "~/server/db/schema";
 
 export const usersRouter = createTRPCRouter({
-  subscribeUserToChat: protectedProcedure
+  subscribeToChat: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
