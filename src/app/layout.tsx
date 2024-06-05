@@ -25,7 +25,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
         <TRPCReactProvider>
           <ClerkProvider>
             <TopHeader />
-            <main className="container min-h-0 pb-16 pt-7">{children}</main>
+            <main className="min-h-0 pb-16 pt-7">{children}</main>
           </ClerkProvider>
         </TRPCReactProvider>
       </body>

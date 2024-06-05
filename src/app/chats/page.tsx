@@ -21,7 +21,7 @@ const ChatsPage = async ({
   const chatsCount = await api.chats.count();
 
   return (
-    <div className="flex flex-col gap-8 pb-16">
+    <div className="container flex flex-col gap-8 pb-16">
       <CreateChatDialog />
       <ChatsPagination page={page} limit={limit} chatsCount={chatsCount} />
 
