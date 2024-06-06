@@ -6,26 +6,21 @@ import { z } from "zod";
 import Recorder from "~/components/recorder";
 import Voice from "~/components/voice";
 import { useChatSubscription, useInfiniteVoices, usePusher } from "~/hooks";
-import { type VoicesWithUserImage } from "~/trpc/types";
+import { api } from "~/trpc/react";
 
-const Chat = ({
-  chatName,
-  initialVoices,
-  currentUserId,
-}: {
-  chatName: string;
-  initialVoices: VoicesWithUserImage;
-  currentUserId: string | null;
-}) => {
+const Chat = ({ currentUserId }: { currentUserId: string | null }) => {
   const { chatId } = useParams();
 
   const chatIdParsed = z.coerce.number().parse(chatId);
+  const { data: chatName } = api.chats.name.useQuery(chatIdParsed, {
+    refetchOnWindowFocus: false,
+  });
 
   const chat = useRef<HTMLDivElement | null>(null);
 
   const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
 
-  const { voices, voiceRef } = useInfiniteVoices(chatIdParsed, initialVoices);
+  const { voices, voiceRef } = useInfiniteVoices(chatIdParsed);
 
   useChatSubscription(currentUserId, chatIdParsed);
   usePusher(chatIdParsed);

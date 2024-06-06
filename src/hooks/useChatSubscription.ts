@@ -16,7 +16,7 @@ const useChatSubscription = (userId: string | null, chatId: number) => {
     subscribeUserToChat(
       { userId, chatId },
       {
-        onSuccess: () => {
+        onSuccess() {
           isSubscribed.current = true;
           router.refresh();
         },
