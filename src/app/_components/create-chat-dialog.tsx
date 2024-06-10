@@ -45,7 +45,7 @@ const CreateChatDialog = () => {
     },
   });
 
-  const { mutate: createChat } = api.chats.create.useMutation();
+  const { mutate: createChat } = api.chat.create.useMutation();
 
   const handleCreateChat = async (values: FormSchema) => {
     createChat(values.name, {

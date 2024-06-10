@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { users, usersToChats } from "~/server/db/schema";
 
-export const usersRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   subscribeToChat: protectedProcedure
     .input(
       z.object({

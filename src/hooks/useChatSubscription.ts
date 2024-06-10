@@ -6,7 +6,7 @@ const useChatSubscription = (userId: string | null, chatId: number) => {
   const router = useRouter();
 
   const { mutate: subscribeUserToChat } =
-    api.users.subscribeToChat.useMutation();
+    api.user.subscribeToChat.useMutation();
 
   const isSubscribed = useRef(false);
 

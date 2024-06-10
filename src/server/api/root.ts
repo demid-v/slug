@@ -1,6 +1,6 @@
-import { chatsRouter } from "./routers/chats";
-import { usersRouter } from "./routers/users";
-import { voicesRouter } from "./routers/voices";
+import { chatRouter } from "./routers/chat";
+import { userRouter } from "./routers/user";
+import { voiceRouter } from "./routers/voice";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -9,9 +9,9 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  voices: voicesRouter,
-  chats: chatsRouter,
-  users: usersRouter,
+  voice: voiceRouter,
+  chat: chatRouter,
+  user: userRouter,
 });
 
 // export type definition of API

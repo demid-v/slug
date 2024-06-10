@@ -17,10 +17,10 @@ const ChatPage = async ({
   const { success, data: chatIdParsed } = z.coerce.number().safeParse(chatId);
   if (!success) return notFound();
 
-  const chatName = await helpers.chats.name.fetch(chatIdParsed);
+  const chatName = await helpers.chat.name.fetch(chatIdParsed);
   if (typeof chatName === "undefined") return notFound();
 
-  await helpers.voices.withUserImage.prefetchInfinite({
+  await helpers.voice.all.prefetchInfinite({
     chatId: chatIdParsed,
   });
 

@@ -8,7 +8,7 @@ import {
 import { db } from "~/server/db";
 import { chats, voices } from "~/server/db/schema";
 
-export const chatsRouter = createTRPCRouter({
+export const chatRouter = createTRPCRouter({
   all: protectedProcedure
     .input(
       z.object({

@@ -5,14 +5,13 @@ import { api } from "~/trpc/react";
 const useInfiniteVoices = (chatId: number) => {
   const { ref: voiceRef, inView } = useInView();
 
-  const { data: voicesData, fetchNextPage } =
-    api.voices.withUserImage.useInfiniteQuery(
-      { chatId },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        refetchOnWindowFocus: false,
-      },
-    );
+  const { data: voicesData, fetchNextPage } = api.voice.all.useInfiniteQuery(
+    { chatId },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const voices = voicesData?.pages.flatMap((page) => page.voices) ?? [];
 

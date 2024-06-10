@@ -7,7 +7,7 @@ const MyChats = async ({ className }: { className?: string }) => {
   const { userId } = auth();
   if (!userId) throw new Error("Unauthorized");
 
-  const myChats = await api.chats.my(userId);
+  const myChats = await api.chat.my(userId);
 
   return (
     <ol

@@ -17,8 +17,8 @@ const ChatsPage = async ({
     .safeParse(searchParams);
   const { page, limit } = parsedSearchParams ?? {};
 
-  const chats = await api.chats.all({ page, limit });
-  const chatsCount = await api.chats.count();
+  const chats = await api.chat.all({ page, limit });
+  const chatsCount = await api.chat.count();
 
   return (
     <div className="container flex flex-col gap-8 pb-16">
