@@ -12,9 +12,7 @@ const Chat = ({ currentUserId }: { currentUserId: string | null }) => {
   const { chatId } = useParams();
 
   const chatIdParsed = z.coerce.number().parse(chatId);
-  const { data: chatName } = api.chat.name.useQuery(chatIdParsed, {
-    refetchOnWindowFocus: false,
-  });
+  const { data: chatName } = api.chat.name.useQuery(chatIdParsed);
 
   const chat = useRef<HTMLDivElement | null>(null);
 

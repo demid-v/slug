@@ -9,7 +9,6 @@ const useInfiniteVoices = (chatId: number) => {
     { chatId },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      refetchOnWindowFocus: false,
     },
   );
 

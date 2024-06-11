@@ -7,7 +7,15 @@ import { useState } from "react";
 import superjson from "superjson";
 import { type AppRouter } from "~/server/api/root";
 
-const createQueryClient = () => new QueryClient();
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 24 * 60 * 60 * 1000, // 24hr
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
