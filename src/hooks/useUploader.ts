@@ -14,7 +14,7 @@ const useUploader = (voiceBlob: Blob | undefined) => {
   });
 
   useEffect(() => {
-    if (typeof voiceBlob === "undefined") return;
+    if (voiceBlob === undefined) return;
 
     const file = new File([voiceBlob], `${new Date().toISOString()}.mp3`);
     const audio = new Audio(URL.createObjectURL(voiceBlob));

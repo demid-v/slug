@@ -1,5 +1,5 @@
 const formatTime = (time: number | undefined) => {
-  if (typeof time === "undefined") return "0:00";
+  if (time === undefined) return "0:00";
 
   const minutes = Math.floor(time / 60)
     .toString()

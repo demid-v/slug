@@ -1,32 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useRef } from "react";
+import wretch from "wretch";
 
 const useVoiceVisualizer = (url: string) => {
-  const isFetchingVoiceBlob = useRef(false);
-  const [voiceBlob, setVoiceBlob] = useState<Blob>();
-
   const voiceVisualizer = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
-    if (isFetchingVoiceBlob.current) return;
+  const { data: voiceBlob } = useQuery({
+    queryKey: [url],
+    queryFn: () =>
+      wretch(url)
+        .get()
+        .res((response) => response.blob()),
+  });
 
-    isFetchingVoiceBlob.current = true;
-
-    fetch(url)
-      .then((res) => {
-        res
-          .blob()
-          .then((blob) => {
-            setVoiceBlob(blob);
-          })
-          .catch(console.error);
-      })
-      .catch(console.error)
-      .finally(() => {
-        isFetchingVoiceBlob.current = false;
-      });
-  }, [url]);
-
-  return { voiceBlob, voiceVisualizer };
+  return { voiceVisualizer, voiceBlob };
 };
 
 export default useVoiceVisualizer;

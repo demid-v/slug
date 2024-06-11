@@ -18,7 +18,7 @@ const ChatPage = async ({
   if (!success) return notFound();
 
   const chatName = await helpers.chat.name.fetch(chatIdParsed);
-  if (typeof chatName === "undefined") return notFound();
+  if (chatName === undefined) return notFound();
 
   await helpers.voice.all.prefetchInfinite({
     chatId: chatIdParsed,

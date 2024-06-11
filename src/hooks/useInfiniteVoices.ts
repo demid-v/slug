@@ -17,7 +17,7 @@ const useInfiniteVoices = (chatId: number) => {
 
   const lastPageLength = voicesData?.pages.at(-1)?.voices?.length;
   const isAllFetched =
-    typeof lastPageLength !== "undefined" && lastPageLength < 15 ? true : false;
+    lastPageLength !== undefined && lastPageLength < 15 ? true : false;
 
   useEffect(() => {
     if (!inView || isAllFetched) return;

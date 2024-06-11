@@ -11,7 +11,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
 
   return (
     <div
-      className="transition- flex min-w-fit gap-1 pl-3"
+      className="flex min-w-fit gap-1 pl-3"
       style={{ scrollbarWidth: "thin" }}
     >
       {isOpen && children}

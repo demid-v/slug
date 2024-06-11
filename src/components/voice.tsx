@@ -42,7 +42,7 @@ const Voice = forwardRef(
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
 
-    useImperativeHandle(ref, () => voiceContainer.current as HTMLInputElement);
+    useImperativeHandle(ref, () => voiceContainer.current!, []);
 
     const { togglePlayPause, isPlaying, voiceTime } = useVoice(
       url,
@@ -53,7 +53,7 @@ const Voice = forwardRef(
       createdAt,
     );
 
-    const { voiceBlob, voiceVisualizer } = useVoiceVisualizer(url);
+    const { voiceVisualizer, voiceBlob } = useVoiceVisualizer(url);
     const [voiceKey, setVoiceKey] = useState<number | null>(null);
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const Voice = forwardRef(
               userId === currentUserId && "outline outline-2 outline-black",
             )}
           >
-            {typeof imageUrl !== "undefined" ? (
+            {imageUrl !== undefined ? (
               <Image
                 src={imageUrl}
                 alt="Profile pic"
