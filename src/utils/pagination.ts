@@ -1,7 +1,7 @@
 const range = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => index + start);
 
-const pagination = ({
+const paginate = ({
   totalCount,
   limit,
   siblingCount = 1,
@@ -76,4 +76,4 @@ const pagination = ({
   return [firstPageIndex, "DOTS", ...middleRange, "DOTS", lastPageIndex];
 };
 
-export default pagination;
+export default paginate;

@@ -7,7 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
-import { pagination } from "~/utils";
+import { paginate } from "~/utils";
 import { cn } from "~/utils/classes";
 
 const ChatsPagination = ({
@@ -19,7 +19,7 @@ const ChatsPagination = ({
   limit: number | undefined;
   chatsCount: number;
 }) => {
-  const paginationRange = pagination({
+  const paginationRange = paginate({
     totalCount: chatsCount,
     limit,
     currentPage: page,
