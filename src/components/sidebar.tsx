@@ -10,7 +10,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   const toggleSidebar = () => setIsOpen((isOpen) => !isOpen);
 
   return (
-    <div
+    <aside
       className="flex min-w-fit gap-1 pl-3"
       style={{ scrollbarWidth: "thin" }}
     >
@@ -18,7 +18,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
       <Button variant="ghost" onClick={toggleSidebar}>
         {isOpen ? <ChevronRight /> : <ChevronLeft />}
       </Button>
-    </div>
+    </aside>
   );
 };
 

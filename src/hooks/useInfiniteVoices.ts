@@ -1,28 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { api } from "~/trpc/react";
 
 const useInfiniteVoices = (chatId: number) => {
   const { ref: voiceRef, inView } = useInView();
 
-  const { data: voicesData, fetchNextPage } = api.voice.all.useInfiniteQuery(
+  const {
+    data: voicesData,
+    fetchNextPage,
+    isLoading,
+    isFetching,
+    hasNextPage,
+  } = api.voice.all.useInfiniteQuery(
     { chatId },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
-  const voices = voicesData?.pages.flatMap((page) => page.voices) ?? [];
-
-  const lastPageLength = voicesData?.pages.at(-1)?.voices?.length;
-  const isAllFetched =
-    lastPageLength !== undefined && lastPageLength < 15 ? true : false;
+  const voices = useMemo(
+    () => voicesData?.pages.flatMap((page) => page.voices) ?? [],
+    [voicesData?.pages],
+  );
 
   useEffect(() => {
-    if (!inView || isAllFetched) return;
+    if (!inView || !isLoading || !isFetching || !hasNextPage) return;
 
     void fetchNextPage();
-  }, [fetchNextPage, inView, isAllFetched]);
+  }, [fetchNextPage, hasNextPage, inView, isFetching, isLoading]);
 
   return { voices, voiceRef };
 };
