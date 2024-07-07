@@ -54,7 +54,7 @@ const paginate = ({
     const leftItemCount = 3 + 2 * siblingCount;
     const leftRange = range(1, leftItemCount);
 
-    return [...leftRange, "DOTS", totalPageCount];
+    return [...leftRange, "DOTS", totalPageCount] as const;
   }
 
   /**
@@ -66,14 +66,20 @@ const paginate = ({
       totalPageCount - rightItemCount + 1,
       totalPageCount,
     );
-    return [firstPageIndex, "DOTS", ...rightRange];
+    return [firstPageIndex, "DOTS", ...rightRange] as const;
   }
 
   /**
    * Case 4: Both left and right dots to be shown
    */
   const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-  return [firstPageIndex, "DOTS", ...middleRange, "DOTS", lastPageIndex];
+  return [
+    firstPageIndex,
+    "DOTS",
+    ...middleRange,
+    "DOTS",
+    lastPageIndex,
+  ] as const;
 };
 
 export default paginate;
