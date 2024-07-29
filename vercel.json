@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/awake-redis",
+      "schedule": "0 0 * * 0"
+    }
+  ]
+}

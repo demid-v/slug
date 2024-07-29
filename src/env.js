@@ -27,6 +27,8 @@ export const env = createEnv({
 
     PUSHER_APP_ID: z.string(),
     PUSHER_SECRET: z.string(),
+
+    CRON_SECRET: z.string(),
   },
 
   /**
@@ -65,6 +67,8 @@ export const env = createEnv({
     PUSHER_APP_ID: process.env.PUSHER_APP_ID,
     NEXT_PUBLIC_PUSHER_KEY: process.env.NEXT_PUBLIC_PUSHER_KEY,
     PUSHER_SECRET: process.env.PUSHER_SECRET,
+
+    CRON_SECRET: process.env.CRON_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
