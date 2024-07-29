@@ -19,12 +19,12 @@ export const chatRouter = createTRPCRouter({
     .query(
       async ({ input: { page, limit } }) =>
         await db.query.chats.findMany({
-          offset: (page - 1) * limit,
-          limit,
           orderBy: (chats, { desc }) => [
             desc(chats.createdAt),
             desc(voices.id),
           ],
+          offset: (page - 1) * limit,
+          limit,
         }),
     ),
 

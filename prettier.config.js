@@ -2,10 +2,7 @@
 const config = {
   plugins: [
     "@trivago/prettier-plugin-sort-imports",
-    /**
-     * Must come last
-     * https://dev.to/kachidk/common-prettier-plugins-installation-30hc
-     */
+    // Must come last. https://dev.to/kachidk/common-prettier-plugins-installation-30hc
     "prettier-plugin-tailwindcss",
   ],
   importOrder: [],

@@ -45,7 +45,7 @@ const CreateChatDialog = () => {
     },
   });
 
-  const { mutate: createChat } = api.chat.create.useMutation();
+  const { mutate: createChat, isPending } = api.chat.create.useMutation();
 
   const handleCreateChat = async (values: FormSchema) => {
     createChat(values.name, {
@@ -86,7 +86,9 @@ const CreateChatDialog = () => {
               />
             </div>
             <DialogFooter className="justify-center">
-              <Button type="submit">Create</Button>
+              <Button type="submit" disabled={isPending}>
+                Create
+              </Button>
             </DialogFooter>
           </form>
         </Form>
