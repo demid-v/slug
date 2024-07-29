@@ -1,14 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { api } from "~/trpc/react";
 
 const useInfiniteVoices = (chatId: number) => {
-  const { ref: voiceRef, inView } = useInView();
-
   const {
     data: voicesData,
     fetchNextPage,
-    isLoading,
     isFetching,
     hasNextPage,
   } = api.voice.all.useInfiniteQuery(
@@ -21,11 +18,13 @@ const useInfiniteVoices = (chatId: number) => {
     [voicesData?.pages],
   );
 
-  useEffect(() => {
-    if (!inView || !isLoading || !isFetching || !hasNextPage) return;
-
-    void fetchNextPage();
-  }, [fetchNextPage, hasNextPage, inView, isFetching, isLoading]);
+  const { ref: voiceRef } = useInView({
+    triggerOnce: true,
+    onChange(inView) {
+      if (!inView || isFetching || !hasNextPage) return;
+      void fetchNextPage();
+    },
+  });
 
   return { voices, voiceRef };
 };
