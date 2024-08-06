@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "next build",
+    "dev": "next dev --turbo",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx ./src/server/db/seed.ts",
-    "dev": "next dev --turbo",
     "fix-all": "pnpm run format-all && pnpm run tsc-check && pnpm run lint",
     "format-all": "pnpm exec prettier . \"!pnpm-lock.yaml\" --write",
     "tsc-check": "tsc --noEmit",
