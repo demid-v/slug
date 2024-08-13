@@ -3,7 +3,6 @@ import { voices } from "./db/schema";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import { type InferSelectModel } from "drizzle-orm";
 import "server-only";
-import { isPromiseFulfilledResult } from "~/utils";
 
 export type Voice = InferSelectModel<typeof voices>;
 
@@ -16,7 +15,7 @@ export const getUserImagesForVoices = async (voices: Voice[]) =>
       })),
     )
   )
-    .filter(isPromiseFulfilledResult)
+    .filter((result) => result.status === "fulfilled")
     .map((result) => result.value);
 
 export const createVoice = async (

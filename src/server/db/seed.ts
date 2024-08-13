@@ -12,7 +12,6 @@ import path from "path";
 import { type FileEsque } from "uploadthing/types";
 import { db } from "~/server/db";
 import { chats, usersToChats, voices } from "~/server/db/schema";
-import { isPromiseFulfilledResult } from "~/utils";
 
 ffmpeg.setFfprobePath(ffprobePath);
 
@@ -97,7 +96,7 @@ const uploadMockVoices = async () => {
     .map(getMockVoiceData);
 
   return (await Promise.allSettled(fileUploadRequests)).filter(
-    isPromiseFulfilledResult,
+    (result) => result.status === "fulfilled",
   );
 };
 
