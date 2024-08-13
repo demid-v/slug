@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 73d831ffb09522160101c69b8fab688823f1eaa7..9cc58d7dd11cc0dfa34a4ff0893e7e578b956ca8 100644
+--- a/package.json
++++ b/package.json
+@@ -32,6 +32,7 @@
+   "types": "./dist/index.d.ts",
+   "exports": {
+     ".": {
++      "types": "./dist/index.d.ts",
+       "import": "./dist/react-audio-visualize.es.js",
+       "require": "./dist/react-audio-visualize.umd.js"
+     }
