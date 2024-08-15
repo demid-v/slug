@@ -7,10 +7,7 @@ const useVoiceVisualizer = (url: string) => {
 
   const { data: voiceBlob } = useQuery({
     queryKey: [url],
-    queryFn: () =>
-      wretch(url)
-        .get()
-        .res((response) => response.blob()),
+    queryFn: () => wretch().get(url).blob(),
   });
 
   return { voiceVisualizer, voiceBlob };
