@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
+import { useUnmount } from "usehooks-ts";
 import { getVoiceTime } from "~/utils";
 import { type SetState } from "~/utils/types";
 
@@ -44,12 +45,7 @@ const useVoice = (
     });
   }, [url, load, setCurrentTime, getCurrentTime]);
 
-  useEffect(
-    () => () => {
-      stop();
-    },
-    [stop],
-  );
+  useUnmount(stop);
 
   const voiceTime = getVoiceTime(
     duration,
