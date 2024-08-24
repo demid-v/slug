@@ -1,1 +1,1 @@
-export type SetState<T> = (action: T | ((prevState: T) => T)) => void;
+export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
