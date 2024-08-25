@@ -4,15 +4,12 @@ import Image from "next/image";
 import {
   type ForwardedRef,
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
 import { AudioVisualizer as VoiceVisualizer } from "react-audio-visualize";
 import { useVoice, useVoiceVisualizer } from "~/hooks";
 import { cn } from "~/utils/classes";
-import { type SetState } from "~/utils/types";
 
 const Voice = forwardRef(
   (
@@ -21,8 +18,6 @@ const Voice = forwardRef(
       url,
       duration,
       createdAt,
-      voiceVisualizerWidth,
-      setVoiceVisualizerWidth,
       userId,
       currentUserId,
     }: {
@@ -30,8 +25,6 @@ const Voice = forwardRef(
       url: string;
       duration: number;
       createdAt: Date;
-      voiceVisualizerWidth: number;
-      setVoiceVisualizerWidth: SetState<number>;
       userId: string;
       currentUserId: string | null;
     },
@@ -50,22 +43,13 @@ const Voice = forwardRef(
     } = useVoice(url, duration, createdAt);
 
     const { voiceVisualizer, voiceBlob } = useVoiceVisualizer(url);
-    const [voiceKey, setVoiceKey] = useState<number | null>(null);
 
-    useEffect(() => {
-      setVoiceKey(Math.random());
-    }, [voiceVisualizerWidth]);
-
-    useEffect(() => {
-      if (voiceContainer.current === null || voiceVisualizer.current === null)
-        return;
-
-      setVoiceVisualizerWidth(
-        voiceContainer.current.offsetLeft +
+    const voiceVisualizerWidth =
+      voiceContainer.current !== null && voiceVisualizer.current !== null
+        ? voiceContainer.current.offsetLeft +
           voiceContainer.current.offsetWidth -
-          voiceVisualizer.current.offsetLeft,
-      );
-    }, [voiceBlob, voiceVisualizer, setVoiceVisualizerWidth]);
+          voiceVisualizer.current.offsetLeft
+        : 0;
 
     return (
       <div ref={voiceContainer}>
@@ -100,7 +84,6 @@ const Voice = forwardRef(
           </Button>
           {voiceBlob && (
             <VoiceVisualizer
-              key={voiceKey}
               ref={voiceVisualizer}
               blob={voiceBlob}
               width={voiceVisualizerWidth}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { z } from "zod";
 import Recorder from "~/components/recorder";
 import Voice from "~/components/voice";
@@ -15,8 +15,6 @@ const Chat = ({ currentUserId }: { currentUserId: string | null }) => {
   const { data: chatName } = api.chat.name.useQuery(chatIdParsed);
 
   const chat = useRef<HTMLDivElement | null>(null);
-
-  const [voiceVisualizerWidth, setVoiceVisualizerWidth] = useState(0);
 
   const { voices, voiceRef } = useInfiniteVoices(chatIdParsed);
 
@@ -48,8 +46,6 @@ const Chat = ({ currentUserId }: { currentUserId: string | null }) => {
                 url={url}
                 duration={duration}
                 createdAt={createdAt}
-                voiceVisualizerWidth={voiceVisualizerWidth}
-                setVoiceVisualizerWidth={setVoiceVisualizerWidth}
                 userId={userId}
                 currentUserId={currentUserId}
               />
