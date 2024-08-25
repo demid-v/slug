@@ -1,17 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAudioPlayer } from "react-use-audio-player";
 import { useUnmount } from "usehooks-ts";
 import { getVoiceTime } from "~/utils";
-import { type SetState } from "~/utils/types";
 
 const useVoice = (
   url: string,
   duration: number | undefined,
-  currentTime: number,
-  setCurrentTime: SetState<number>,
-  setLocaleCreatedAt: SetState<string>,
   createdAt: Date,
 ) => {
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
   const currentTimeRequest = useRef<number>();
 
   const {
@@ -59,7 +57,13 @@ const useVoice = (
     setLocaleCreatedAt(createdAt.toLocaleTimeString());
   }, [setLocaleCreatedAt, createdAt]);
 
-  return { togglePlayPause, isPlaying, voiceTime };
+  return {
+    togglePlayPause,
+    isPlaying,
+    voiceTime,
+    currentTime,
+    localeCreatedAt,
+  };
 };
 
 export default useVoice;

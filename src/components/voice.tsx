@@ -39,19 +39,15 @@ const Voice = forwardRef(
   ) => {
     const voiceContainer = useRef<HTMLDivElement>(null);
 
-    const [currentTime, setCurrentTime] = useState<number>(0);
-    const [localeCreatedAt, setLocaleCreatedAt] = useState("Loading...");
-
     useImperativeHandle(ref, () => voiceContainer.current!, []);
 
-    const { togglePlayPause, isPlaying, voiceTime } = useVoice(
-      url,
-      duration,
+    const {
+      togglePlayPause,
+      isPlaying,
+      voiceTime,
       currentTime,
-      setCurrentTime,
-      setLocaleCreatedAt,
-      createdAt,
-    );
+      localeCreatedAt,
+    } = useVoice(url, duration, createdAt);
 
     const { voiceVisualizer, voiceBlob } = useVoiceVisualizer(url);
     const [voiceKey, setVoiceKey] = useState<number | null>(null);
