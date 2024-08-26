@@ -35,8 +35,9 @@ const useVoice = (
         requestCurrentTime();
       },
       onend() {
-        if (currentTimeRequest.current !== undefined)
+        if (currentTimeRequest.current !== undefined) {
           cancelAnimationFrame(currentTimeRequest.current);
+        }
 
         setCurrentTime(0);
       },

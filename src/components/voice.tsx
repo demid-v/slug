@@ -44,13 +44,6 @@ const Voice = forwardRef(
 
     const { voiceVisualizer, voiceBlob } = useVoiceVisualizer(url);
 
-    const voiceVisualizerWidth =
-      voiceContainer.current !== null && voiceVisualizer.current !== null
-        ? voiceContainer.current.offsetLeft +
-          voiceContainer.current.offsetWidth -
-          voiceVisualizer.current.offsetLeft
-        : 0;
-
     return (
       <div ref={voiceContainer}>
         <div className="flex gap-1.5">
@@ -86,7 +79,7 @@ const Voice = forwardRef(
             <VoiceVisualizer
               ref={voiceVisualizer}
               blob={voiceBlob}
-              width={voiceVisualizerWidth}
+              width={271}
               height={36}
               barWidth={3}
               gap={5}
